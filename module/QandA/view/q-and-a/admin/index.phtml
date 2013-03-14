@@ -1,0 +1,11 @@
+<?php
+// zfcUser authentication stuff
+// zfcUser authentication stuff
+try {
+	$name = $this->zfcUserDisplayName(); 
+} catch (\ZfcUser\Exception\DomainException $e) {
+	$name = 'guest';
+} catch (Exception $e) {
+	$name = 'guest';
+}
+echo 'Welcome ' . $name . PHP_EOL;

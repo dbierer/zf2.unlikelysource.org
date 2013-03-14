@@ -1,0 +1,10 @@
+<?php if (count($this->messages) > 0) : 		?>
+<?php 	echo $this->htmlList($this->messages); 	?>
+<?php endif; 									?>
+<h1><?php echo $this->escapeHtml($this->class); ?></h1>
+<?php foreach ($this->listing as $item) : ?>
+	<h2><?php echo $this->escapeHtml($item->title); ?></h2>
+	<pre>
+	<?php echo $this->escapeHtml($item->body); ?>
+	</pre>
+<?php endforeach; 							?>

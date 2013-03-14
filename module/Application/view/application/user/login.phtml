@@ -1,0 +1,46 @@
+<script language=javascript type='text/javascript'>
+function toggleRegister() 
+{
+	var div = document.getElementById('zfc-user-register');
+	div.style.display="block";
+	document.forms['zfc-user-login-form']['zfc-user-login-button'].value = 'Register';
+	var button = document.getElementById('zfc-user-login-button');
+//	button.value= 'Register';
+}
+</script>
+<h1>Sign In</h1>
+
+<?php
+$form = $this->loginForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('zfcuser/login'));
+$form->setAttribute('method', 'post');
+$form->setAttribute('name', 'zfc-user-login-form')
+?>
+
+<?php echo $this->form()->openTag($form) ?>
+
+    <dl class="zend_form">
+        <?php echo $this->formElementErrors($form->get('identity')) ?>
+
+        <dt><?php echo $this->formLabel($form->get('identity')) ?></dt>
+        <dd><?php echo $this->formInput($form->get('identity')) ?></dd>
+
+        <dt><?php echo $this->formLabel($form->get('credential')) ?></dt>
+        <dd><?php echo $this->formInput($form->get('credential')) ?></dd>
+
+		<div id="zfc-user-register" style="display:none">
+        <dt><?php echo $this->formLabel($form->get('key')) ?></dt>
+        <dd><?php echo $this->formInput($form->get('key')) ?></dd>
+        <dd><?php echo $this->formButton($form->get('register')) ?></dd>
+        </div>
+		
+        <dd><?php echo $this->formButton($form->get('submit')) ?></dd>
+    </dl>
+
+<?php if ($this->enableRegistration) : ?>
+	Not registered? <a name="register" onClick="toggleRegister()">Sign up!</a>
+<?php endif; ?>
+
+<?php echo $this->form()->closeTag() ?>
+

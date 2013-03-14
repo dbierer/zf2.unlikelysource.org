@@ -1,0 +1,312 @@
+body {
+	background: #161616;
+	color: #999;
+}
+#allwrap {
+	background: none;
+  	border: 0px solid #666;
+}
+#topmenuwrap {
+  background: none;
+  border-top: 0px dotted #99a;
+  border-bottom: 1px dotted #444;
+}
+#topmenu {
+	background: none;
+	border-top: 0px solid #000;
+}
+#header {
+	background: none;
+	border-bottom: 0px solid #99a;
+}
+#logo {
+	border-top: 0px solid #fff;
+	background: none;
+}
+#headerright{
+	background: url(../images/banner.jpg) no-repeat center right;
+}
+#banner {
+	background: none;
+}
+h1 {
+color: #fff;
+}
+h2 {
+color: #fff;
+}
+#logo h2 {
+	color:#fff;
+}
+#logo a:link, #logo a:visited, #logo a:hover, #logo a:active {
+border: none;
+}
+#logo h2 a:link, #logo h2 a:visited, #logo h2 a:hover, #logo h2 a:active {
+color: #fff;
+text-decoration: none;
+}
+h3 {
+color: #fff;
+}
+#logo h3 {
+	color: #fff;
+}
+h4 {
+color: #fff;
+}
+h5 {
+color: #ccc;
+}
+h6 {
+color: #ccc;
+}
+#search{
+	background: none;
+}
+#search input.inputbox {
+	background: #333;
+    color: #ccc;
+    border:1px solid #444;
+}
+#search div.search label{
+    color: #fff;
+}
+#wrap {
+	background: none;
+}
+#cbody {
+
+}
+#content60 {
+	background: none;
+}
+#pathway {
+	background: none;
+	border-top: 0px solid #e7e7e8;
+}
+#pathway a:link, #pathway a:visited {
+color: #fff;
+text-decoration: none;
+}
+#pathway a:hover, #pathway a:active {
+color: #fff;
+text-decoration: underline;
+}
+#content {
+	background: none;
+}
+#footerwrap {
+	background: none;
+}
+#footer {
+	background: none;
+	color: #999;
+	border-top: 1px dotted #444;
+}
+#footer div.moduletable {
+background: none;
+}
+#sidebar {
+	background: none;
+}
+#sidebar-2 {
+	background: none;
+}
+fieldset{
+
+}
+a:link, a:visited {
+color: #fff;
+text-decoration: none;
+}
+a:hover, a:active {
+color: #fff;
+text-decoration: underline;
+}
+h2 a:link, h2 a:visited, h2 a:hover, h2 a:active {
+color: #fff;
+}
+#footer a:link, #footer a:visited, #footer a:hover, #footer a:active {
+color: #999;
+text-decoration: underline;
+}
+#a4j a:link, #a4j a:visited, #a4j a:hover, #a4j a:active {
+color: #999;
+text-decoration: underline;
+}
+/* ==== MODULES =======================================  */
+div.moduletable {
+	background: none;
+}
+div.moduletable h3 {
+	color:#fff;
+    background: none;
+    border-bottom: 1px solid #444;
+}
+/* ==== SIDEBAR MODULES =======================================  */
+#sidebar div.moduletable {
+	background: none;
+}
+#sidebar div.moduletable h3 {
+	color:#fff;
+    background: none;
+    border-bottom: 1px solid #444;
+}
+/* ==== SIDEBAR2 MODULES =======================================  */
+#sidebar-2 div.moduletable {
+	background: none;
+}
+#sidebar-2 div.moduletable h3 {
+	color:#fff;
+    background: none;
+    border-bottom: 1px solid #444;
+}
+/* ======= SEARCH =======================  */
+#search .moduletable {
+	background: none;
+}
+#search .moduletable h3{
+	background: none;
+}
+/* ======= Topmenu =========== */
+#topmenu .moduletable {
+    border: 0;
+}
+#topmenu .menu {
+	background: none;
+	color: #999;
+	border: 0;
+}
+#topmenu .menu li a {
+    color: #999;
+	border-right: 0px solid #3f4000;
+}
+#topmenu .menu li.active a {
+	color: #fff;
+}
+#topmenu .menu li a:hover {
+	color: #fff;
+}
+/* ======= SIDE MENUS ================================  */
+.moduletable_menu {
+background: none ;
+color: #999;
+border-bottom: 0px solid #fff;
+}
+.moduletable_menu h3 {
+	color:#fff;
+    background: none;
+    border-bottom: 1px solid #444;
+}
+.moduletable_menu li {
+	border-bottom: 1px dotted #444;
+}
+.moduletable_menu li ul li {
+	border-bottom:0px solid #ccc;
+	border-top:0px dashed #e4e4e4;
+	background: none;
+}
+.moduletable_menu li a {
+	color: #999;
+}
+.moduletable_menu li ul li a {
+background: none;
+}
+.moduletable_menu ul.menu li.current a {
+	color:#fff;
+}
+.moduletable_menu ul.menu li.current * a {
+	color:#999;
+}
+.moduletable_menu li ul li a:hover, .moduletable_menu li.current ul li a:hover {
+	color:#fff;
+}
+.moduletable_menu li a:link, .moduletable_menu li a:visited {
+color: #999;
+text-decoration: none;
+}
+.moduletable_menu li a:hover {
+color: #fff;
+text-decoration: none;
+}
+.moduletable_menu li a:active {
+color: #fff;
+text-decoration: none;
+}
+
+/* ================  details  ==================== */
+.content_rating {
+	color: #777;
+}
+.content_vote {
+	color: #777;
+}
+.article-info {
+ 	color: #777;
+}
+/* =====================  Search results ===================== */
+dl.search-results dd.result-created {
+    color: #777;
+}
+div.search form#searchForm fieldset.word,
+div.search form#searchForm fieldset.phrases,
+div.search form#searchForm fieldset.only {
+    border: 1px solid #777;
+}
+.small{
+    color:#777;
+}
+/* =====================  Single Contact ===================== */
+div.contact dl.tabs dt.open a {
+    color: #999;
+}
+div.contact dl.tabs dt {
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    border-top: 1px solid #999;
+}
+div.contact div.current {
+    border: 1px solid #999;
+}
+/* ===================== tooltip =====================  */
+.tip {
+	color: #000;
+	border:1px solid #ccc;
+	background:#fff;
+}
+/* ===================== Submit a weblink, Submit an article, Edit article =====================  */
+div.edit form fieldset
+{
+    border: 1px solid #ccc;
+}
+/* =====================  User profile ===================== */
+.profile-edit #member-profile fieldset
+{
+    border: 1px solid #ccc;
+}
+div.profile fieldset{
+    border: 1px solid #ccc;
+}
+/* =====================  Input box color ===================== */
+input#modlgn-username,
+input#modlgn-passwd,
+input#username,
+input#password,
+form#member-registration input,
+form#user-registration input,
+form#contact-form input
+ {
+	background: #333;
+	color: #fff;
+	border:1px solid #444;
+}
+
+form#contact-form textarea {
+	background: #333;
+	color: #fff;
+	border:1px solid #444;
+}
+/* ===================== Editor Buttons ===================== */
+div.button2-left a {
+	color:#000;
+}

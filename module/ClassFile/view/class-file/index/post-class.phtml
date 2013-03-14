@@ -1,0 +1,29 @@
+<?php
+$form = $this->classForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('classfile-post'));
+$form->setAttribute('method', 'POST');
+echo $this->form()->openTag($form);
+?>
+<?php if (isset($this->messages) && count($this->messages)) : ?>
+<b><i style="color: red;"><?php echo implode('<br />', $this->messages); ?></i></b>
+<?php endif; ?>
+<table>
+<?php echo $this->elementToRow($form->get('class')); ?>
+<?php echo $this->elementToRow($form->get('title')); ?>
+<?php echo $this->elementToRow($form->get('body')); ?>
+</table>
+<?php $captcha = $form->get('captcha'); ?>
+<?php //echo $this->formLabel($captcha); ?>
+<?php echo $this->formElement($captcha); ?>
+<?php $captchaErrors = $this->formElementErrors($captcha); ?>
+<?php echo $captchaErrors; ?>
+<p>&nbsp;</p>
+<?php echo $this->formSubmit($form->get('submit')); ?>
+<?php echo $this->form()->closeTag($form); ?>
+<p>&nbsp;</p>
+<p>
+Form Data Submitted:
+<pre>
+<?php var_dump($this->data); ?>
+</pre>

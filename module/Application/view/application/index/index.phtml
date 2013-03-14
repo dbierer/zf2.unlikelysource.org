@@ -1,0 +1,31 @@
+<style>
+li {
+	color: white;
+	font-weight: bold;
+}
+</style>
+<?php $this->placeholder('date')->set(date('l, d M Y')); ?>
+<?php echo $this->htmlList($this->messages); ?>
+<pre>
+&lt;?php
+/**
+ * This makes our life easier when dealing with paths. Everything is relative
+ * to the application root now.
+ */
+chdir(dirname(__DIR__));
+
+// Setup autoloading
+//require 'init_autoloader.php';
+$zf2Path = 'vendor/ZF2/library';
+include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
+Zend\Loader\AutoloaderFactory::factory(array(
+	'Zend\Loader\StandardAutoloader' => array(
+		'autoregister_zf' => true
+	)
+));
+require $zf2Path . '/Zend/Stdlib/compatibility/autoload.php';
+require $zf2Path . '/Zend/Session/compatibility/autoload.php';
+
+// Run the application!
+Zend\Mvc\Application::init(require 'config/application.config.php')->run();
+</pre>
