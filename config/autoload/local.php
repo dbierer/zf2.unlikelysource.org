@@ -28,7 +28,7 @@ return array(
 	// The 'db' key has special significance
     // look at the source code for Zend\Db\Adapter\AdapterServiceFactory
     // you will need to alter this to match your own database settings
-    // NOTE: look in /data/data.sql for the database structure
+    // NOTE: look in /docs/data.sql for the database structure
     'db' => array(
         'driver'         => 'pdo',
         'dsn'            => 'mysql:dbname=zf2_unlikelysource_org;host=localhost',
