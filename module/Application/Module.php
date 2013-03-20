@@ -21,11 +21,12 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-        $eventManager->attach('dispatch', array($this, 'onDispatch'), 100);
+        //$eventManager->attach('dispatch', array($this, 'onDispatch'), 100);
         // test code matching ZF2F slide 8-12
         //$eventManager->attach('render', array($this, 'registerJsonStrategy'), 100);
     }
 
+    // NOTE: not used right now
 	public function onDispatch(MvcEvent $e)
 	{
 		// get template params
@@ -36,15 +37,16 @@ class Module
 	 	$vm->setVariable('templateParams', $templateParams);
 	}
 
-public function registerJsonStrategy(MvcEvent $e)
-{
-	$locator = $e->getTarget()->getServiceManager();
-	$view = $locator->get('Zend\View\View');
-	$jsonStrategy = $locator->get('ViewJsonStrategy');
-	$view->getEventManager()->attach($jsonStrategy, 100);
-	// NOTE: alternative approach, in module.config.php:
-	// 'view_manager' => [ 'strategies' => [ 'ViewJsonStrategy', 'ViewFeedStrategy', etc. ], ]
-}
+    // NOTE: not used right now
+	public function registerJsonStrategy(MvcEvent $e)
+	{
+		$locator = $e->getTarget()->getServiceManager();
+		$view = $locator->get('Zend\View\View');
+		$jsonStrategy = $locator->get('ViewJsonStrategy');
+		$view->getEventManager()->attach($jsonStrategy, 100);
+		// NOTE: alternative approach, in module.config.php:
+		// 'view_manager' => [ 'strategies' => [ 'ViewJsonStrategy', 'ViewFeedStrategy', etc. ], ]
+	}
 	
     public function getConfig()
     {

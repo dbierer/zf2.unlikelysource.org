@@ -1,31 +1,45 @@
-<style>
-li {
-	color: white;
-	font-weight: bold;
-}
-</style>
-<?php $this->placeholder('date')->set(date('l, d M Y')); ?>
-<?php echo $this->htmlList($this->messages); ?>
-<pre>
-&lt;?php
-/**
- * This makes our life easier when dealing with paths. Everything is relative
- * to the application root now.
- */
-chdir(dirname(__DIR__));
+<h1>Welcome!</h1>
+<hr />
+The source code for this website is now posted here:
+<a href="https://github.com/dbierer/zf2-demo-modules" target="_blank">https://github.com/dbierer/zf2-demo-modules</a>
+<hr />
+Here is a summary of the demo modules current running:
+<table>
+<tr><th><h2>Module</h2></th><th><h2>Description</h2></th></tr>
+<tr>
+<td><h3>CheckOrder</h3></td>
+<td>
+<ul>
+<li>Demonstrates what happens when the same ServiceManager key "check-test" is configured in:
+	<ul>
+	<li>config/autoload/local.php</li>
+	<li>module/CheckOrder/config/module.config.php</li>
+	<li>module/CheckOrder/Module.php</li>
+	</ul>
+	This module also shows events and listeners configured in the Module.php file, using
+	the init() and onBootStrap() methods.
+	</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td><h3>RouteTest</h3></td>
+<td>
+Demonstrates the following routes:
+<ul>
+<li>hostname</li>
+<li>query</li>
+<li>wildcard</li>
+</ul>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td><h3>Forum</h3></td>
+<td>Module which implements a simple forum with categories and topics.
+<br />Shows solutions to lab specific to various classes which have been running over the past several months.
+</td>
+</tr>
 
-// Setup autoloading
-//require 'init_autoloader.php';
-$zf2Path = 'vendor/ZF2/library';
-include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-Zend\Loader\AutoloaderFactory::factory(array(
-	'Zend\Loader\StandardAutoloader' => array(
-		'autoregister_zf' => true
-	)
-));
-require $zf2Path . '/Zend/Stdlib/compatibility/autoload.php';
-require $zf2Path . '/Zend/Session/compatibility/autoload.php';
-
-// Run the application!
-Zend\Mvc\Application::init(require 'config/application.config.php')->run();
-</pre>
+</table>

@@ -12,8 +12,9 @@ return array(
         'ZfcUser',
         'CheckOrder',
         'QandA',
-        'ClassFile',
-        'RouteTest'
+        'RouteTest',
+        'Forum',
+        'TimeLog'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

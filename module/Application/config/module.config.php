@@ -20,7 +20,13 @@ return array(
                     ),
                 ),
             ),
-            // The following is a route to simplify getting started creating
+            'unlikelysource' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => 'http://www.unlikelysource.com/',
+                ),
+            ),
+        	// The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
             // using the path /application/:controller/:action
@@ -50,26 +56,6 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-        ),
-        'services' => array(
-        	'application-template-params' => array(
-				'margin' 			=> 30,
-				'outermargin' 		=> 0,
-				'title' 			=> 'zf2.unlikelysource.org',
-				'logoText' 			=> 'zf2.unlikelysource.org',
-				'slogan'			=> '',
-				'logo'				=> '<img src="http://www.unlikelysource.com/assets/images/zf-zce-logo.gif" />',
-				'banner'			=> '',
-				'pageWidth'			=> 960,
-				'rightColumnWidth'	=> 190,
-				'leftColumnWidth'	=> 190,
-				'logoWidth'			=> 500,
-				'removeBanner' 		=> true,
-				'searchWidth' 		=> 170,
-				'searchHeight' 		=> 33,
-				'showLeftColumn' 	=> true,
-				'showRightColumn' 	=> true,
-        	),
         ),
     ),
     'translator' => array(

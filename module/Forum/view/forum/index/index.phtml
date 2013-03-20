@@ -1,0 +1,12 @@
+<?php if (count($this->messages) > 0) : 		?>
+	<?php echo $this->htmlList($this->messages); 	?>
+<?php endif; 									?>
+<?php if (isset($this->topics)) : 				?>
+	<h1><?php echo $this->category; ?></h1>
+	<?php 	foreach ($this->topics as $item):	?>
+	<br />
+	<a href="/forum/topic/<?php echo $this->category; ?>/<?php echo $item->item; ?>"><?php echo $item->item;?></a>
+	<?php 	endforeach; ?>
+<?php else : 									?>
+Please login to view forum postings!
+<?php endif; 									?>

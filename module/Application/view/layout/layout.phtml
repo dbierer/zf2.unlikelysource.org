@@ -8,7 +8,24 @@ if ($user) {
 } 
 // check to see if admin
 // template stuff
-$template 			= $this->templateParams;
+$template = array(
+		'margin' 			=> 30,
+		'outermargin' 		=> 0,
+		'title' 			=> 'zf2.unlikelysource.org',
+		'logoText' 			=> 'zf2.unlikelysource.org',
+		'slogan'			=> '',
+		'logo'				=> '<img src="http://www.unlikelysource.com/assets/images/zf-zce-logo.gif" />',
+		'banner'			=> '',
+		'pageWidth'			=> 960,
+		'rightColumnWidth'	=> 190,
+		'leftColumnWidth'	=> 190,
+		'logoWidth'			=> 500,
+		'removeBanner' 		=> true,
+		'searchWidth' 		=> 170,
+		'searchHeight' 		=> 33,
+		'showLeftColumn' 	=> true,
+		'showRightColumn' 	=> true,
+);
 $showLeftColumn		= TRUE;
 $showRightColumn 	= isset($this->position_6);
 $pageWidth			= $template['pageWidth'] - $template['outermargin'];
@@ -30,7 +47,7 @@ if ($showLeftColumn && $showRightColumn) {
 }
 
 // left menu
-$initMenu = array('home' => 'Home');
+$initMenu = array('home' => 'Home', 'unlikelysource' => 'unlikelysource');
 
 if (isset($this->leftMenu)) {
 	$leftLayoutMenu = array_merge($initMenu, $this->leftMenu);
@@ -46,15 +63,11 @@ if (isset($this->leftMenu)) {
 <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
 <!-- Le styles -->
 <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/images/favicon.ico?v=2'))
-                ->prependStylesheet($this->basePath() . '/css/system.css')
-                ->prependStylesheet($this->basePath() . '/css/general.css')
                 ->prependStylesheet($this->basePath() . '/css/template.css') 
-                ->prependStylesheet($this->basePath() . '/css/black.css') 
+//                ->prependStylesheet($this->basePath() . '/css/black.css') 
+                ->prependStylesheet($this->basePath() . '/css/grey.css') 
 ?>
 <!-- Scripts -->
-<?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
-                              ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-                              ->prependFile($this->basePath() . '/js/jquery.min.js') ?>
 
 <!--[if IE 6]>
 <link rel="stylesheet" href="/css/ie6.css" type="text/css" />
@@ -100,6 +113,12 @@ img, div, a, input { behavior: url(/iepngfix.htc) }
  #auth_captcha-input {
 	width: 190px;
  }
+ #forum-category-select {
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+ 	width: 120px;
+    font-size: 12px;
+ }
+ 
 </style>
 </head>
 <body>
@@ -132,10 +151,14 @@ img, div, a, input { behavior: url(/iepngfix.htc) }
 
 <div id="topmenuwrap" class="gainlayout">
 	<div id="topmenu" class="gainlayout">
+	<?php if (strpos($_SERVER['SERVER_ADDR'], '127.') === 0) : ?>
 	<span class="menu"><a href="http://zf2.unlikelysource.local/">Home</a></span>&nbsp;&nbsp;
-	<span class="menu"><a href="<?php echo $this->basePath(); ?>/check">Check</a></span>&nbsp;&nbsp;
-	<span class="menu"><a href="<?php //echo $this->basePath(); ?>/route-test/">Route-Test</a></span>&nbsp;&nbsp;
-	<span class="menu"><a href="<?php echo $this->basePath(); ?>/classfile">Class</a></span>&nbsp;&nbsp;
+	<?php else : ?>
+	<span class="menu"><a href="http://zf2.unlikelysource.org/">Home</a></span>&nbsp;&nbsp;
+	<?php endif; ?>
+	<span class="menu"><a href="<?php echo $this->basePath(); ?>/check">CheckOrder</a></span>&nbsp;&nbsp;
+	<span class="menu"><a href="<?php //echo $this->basePath(); ?>/routetest/">RouteTest</a></span>&nbsp;&nbsp;
+	<span class="menu"><a href="<?php echo $this->basePath(); ?>/forum">Forum</a></span>&nbsp;&nbsp;
 	<?php if ($name == 'guest') : ?>
 		<span class="menu"><a href="<?php echo $this->basePath(); ?>/user/login">Login</a></span>
 	<?php else : ?>
@@ -170,10 +193,15 @@ img, div, a, input { behavior: url(/iepngfix.htc) }
       	// left column menu
 		echo '<ul>' . PHP_EOL;
       	foreach ($leftLayoutMenu as $key => $value) {
-			printf("<li><a href=\"%s\">%s<a/></li>\n", $this->url($key), $value);
+			printf('<li><a href="%s">%s</a></li>' . PHP_EOL, $this->url($key), $value);
       	}
 		echo '</ul>' . PHP_EOL;
       ?>
+      <h3>Source Code:</h3>
+      Click here to access the source code for this website:
+      <br />
+      <a href="https://github.com/dbierer/zf2-demo-modules">https://github.com/dbierer/zf2-demo-modules</a>
+      <p>&nbsp;</p>
       <h3>General Notes:</h3>
       <ul>
       <li>IE Users: bote that you may have to set "compatibility" mode on!</li>
@@ -210,8 +238,11 @@ img, div, a, input { behavior: url(/iepngfix.htc) }
          <?php echo $this->position_14; ?>    
        <?php endif; ?>
   </div>
-  <div id="unlikelysource-footer">&copy; 2013 <a href="http://unlikelysource.com/">unlikelysource.com</a> all rights reserved</div> 
-  <div id="unlikelysource-footer">Zend Framework Version: <?php echo Zend\Version\Version::VERSION; ?></div> 
+  <div id="unlikelysource-footer">
+  &copy; 2013 <a href="http://unlikelysource.com/">unlikelysource.com</a> all rights reserved 
+  &nbsp;|&nbsp;Zend Framework Version: <?php echo Zend\Version\Version::VERSION; ?> 
+  &nbsp;|&nbsp;PHP Version: <?php echo phpversion(); ?>
+  </div> 
   </div>
 </body>
 </html>

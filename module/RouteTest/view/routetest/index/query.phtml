@@ -1,0 +1,6 @@
+<h1>Route Test -- <?php echo $this->name; ?></h1>
+<?php if (isset($this->params)) : ?>
+	<?php Zend\Debug\Debug::dump($this->params); ?>
+<?php else : ?>
+	No params defined
+<?php endif; ?>

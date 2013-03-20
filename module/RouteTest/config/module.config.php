@@ -2,27 +2,27 @@
 return [
 	'controllers' => [
 		'invokables' => [
-			'route-test-controller-index' => 'RouteTest\Controller\IndexController',
+			'routetest-controller-index' => 'RouteTest\Controller\IndexController',
 		],
 	],
 	'router' => [
 		'routes' => [
-			'route-test-home' => [
+			'routetest-home' => [
 				'type' => 'Zend\Mvc\Router\Http\Segment',
 				'options' => [
-					'route'    => '/route-test[/]',
+					'route'    => '/routetest[/]',
 					'defaults' => [
-						'controller' => 'route-test-controller-index',
+						'controller' => 'routetest-controller-index',
 						'action'     => 'index',
 					],
 				],
 			],
-			'route-test-method-post' => [
+			'routetest-method-post' => [
 				'type' => 'Zend\Mvc\Router\Http\Literal',
 				'options' => [
-					'route'    => '/route-test-post',
+					'route'    => '/routetest-post',
 					'defaults' => [
-						'controller' => 'route-test-controller-index',
+						'controller' => 'routetest-controller-index',
 						'action'     => 'method-post',
 					],
 				],
@@ -32,18 +32,18 @@ return [
 					'options' => [
 						'verb'    => 'post',
 						'defaults' => [
-							'controller' => 'route-test-controller-index',
+							'controller' => 'routetest-controller-index',
 							'action'     => 'method-post',
 						],
 					],
 				],
 			],
-			'route-test-wildcard' => [
+			'routetest-wildcard' => [
 				'type' => 'Zend\Mvc\Router\Http\Literal',
 				'options' => [
-					'route'    => '/route-test-wildcard',
+					'route'    => '/routetest-wildcard',
 					'defaults' => [
-						'controller' => 'route-test-controller-index',
+						'controller' => 'routetest-controller-index',
 						'action'     => 'wildcard',
 					],
 				],
@@ -54,12 +54,12 @@ return [
 					],
 				],
 			],
-			'route-test-query' => [
+			'routetest-query' => [
 				'type' => 'Zend\Mvc\Router\Http\Segment',
 				'options' => [
-					'route'    => '/route-test-query[/:a]',
+					'route'    => '/routetest-query[/:a]',
 					'defaults' => [
-						'controller' => 'route-test-controller-index',
+						'controller' => 'routetest-controller-index',
 						'action'     => 'query',
 					],
 				],
@@ -70,12 +70,12 @@ return [
 					],
 				],
 			],
-			'route-test-hostname' => [
+			'routetest-hostname' => [
 				'type' => 'Zend\Mvc\Router\Http\Hostname',
 				'options' => [
-					'route'    => 'route-test.unlikelysource.local',
+					'route'    => 'route-test.unlikelysource.org',
 					'defaults' => [
-						'controller' => 'route-test-controller-index',
+						'controller' => 'routetest-controller-index',
 						'action'     => 'hostname',
 					],
 				],

@@ -9,40 +9,60 @@ class IndexController extends AbstractActionController
 	public function indexAction()
 	{
 		$viewModel = new ViewModel(array('name' => 'INDEX'));
-		$viewModel->setTemplate('route-test/index/index.phtml');
+		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
 	public function hostnameAction()
 	{
+		if (strpos($_SERVER['SERVER_ADDR'], '127.') === 0) {
+			$url = 'http://zf2.unlikelysource.local/routetest';
+		} else {
+			$url = 'http://zf2.unlikelysource.org/routetest';
+		}
+    	$leftColumnStuff = array('<h4><a href="' . $url . '">&lt;&lt;BACK</a></h4>');
+		$layout = $this->layout();
+		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
 		$viewModel = new ViewModel(array('name' => 'HOSTNAME'));
-		$viewModel->setTemplate('route-test/index/index.phtml');
+		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
 	public function queryAction()
 	{
+    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
+		$layout = $this->layout();
+		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
 		$params = array_merge($this->params()->fromQuery(), $this->params()->fromRoute());
 		$viewModel = new ViewModel(array('name' => 'QUERY', 'params' => $params));
-		$viewModel->setTemplate('route-test/index/show-params.phtml');
+		$viewModel->setTemplate('routetest/index/show-params.phtml');
 		return $viewModel;
 	}
 	public function wildcardAction()
 	{
+    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
+		$layout = $this->layout();
+		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
 		$params = array_merge($this->params()->fromQuery(), $this->params()->fromRoute());
 		$viewModel = new ViewModel(array('name' => 'WILDCARD', 'params' => $params));
-		$viewModel->setTemplate('route-test/index/show-params.phtml');
+		$viewModel->setTemplate('routetest/index/show-params.phtml');
 		return $viewModel;
 	}
 	public function methodGetAction()
 	{
+    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
+		$layout = $this->layout();
+		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
 		$viewModel = new ViewModel(array('name' => 'METHOD - GET'));
-		$viewModel->setTemplate('route-test/index/index.phtml');
+		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
 	public function methodPostAction()
 	{
+    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
+		$layout = $this->layout();
+		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
 		$params = array_merge($this->params()->fromPost());
 		$viewModel = new ViewModel(array('name' => 'METHOD - POST', 'params' => $params));
-		$viewModel->setTemplate('route-test/index/show-params.phtml');
+		$viewModel->setTemplate('routetest/index/show-params.phtml');
 		return $viewModel;
 	}
 }

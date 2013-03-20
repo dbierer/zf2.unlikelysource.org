@@ -1,0 +1,30 @@
+<?php
+$form = $this->topicForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('forum-post'));
+$form->setAttribute('method', 'POST');
+echo $this->form()->openTag($form);
+?>
+<?php if (isset($this->messages) && count($this->messages)) : ?>
+<b><i style="color: red;"><?php echo implode('<br />', $this->messages); ?></i></b>
+<?php endif; ?>
+<table>
+<?php echo $this->elementToRow($form->get('category')); ?>
+<tr><td colspan=2>&nbsp;</td><td>or: <?php echo $this->formElement($form->get('selectCategory')); ?></td></tr>
+<?php echo $this->elementToRow($form->get('topic')); ?>
+<tr><td colspan=2>&nbsp;</td><td>or: <?php echo $this->formElement($form->get('selectTopic')); ?></td></tr>
+<?php echo $this->elementToRow($form->get('title')); ?>
+<?php echo $this->elementToRow($form->get('body')); ?>
+</table>
+<?php $captcha = $form->get('captcha'); ?>
+<?php //echo $this->formLabel($captcha); ?>
+<?php echo $this->formElement($captcha); ?>
+<?php $captchaErrors = $this->formElementErrors($captcha); ?>
+<?php echo $captchaErrors; ?>
+<p>&nbsp;</p>
+<?php echo $this->formSubmit($form->get('submit')); ?>
+<?php echo $this->form()->closeTag($form); ?>
+<p>&nbsp;</p>
+<p>
+Form Data Submitted:
+<?php Zend\Debug\Debug::dump($this->data); ?>
