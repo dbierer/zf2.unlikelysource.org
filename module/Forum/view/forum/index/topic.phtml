@@ -1,11 +1,15 @@
 <?php if (count($this->messages) > 0) : 		?>
-<?php 	echo $this->htmlList($this->messages); 	?>
+	<?php echo $this->htmlList($this->messages); 	?>
 <?php endif; 									?>
 <h1><?php echo $this->escapeHtml($this->class); ?></h1>
 <?php foreach ($this->listing as $item) : ?>
-<h2><?php echo $item->title; ?></h2>
-<i>
-<?php echo $item->author; ?> : <?php echo $item->modified; ?>
-</i>
-<pre><?php echo $this->escapeHtml($item->body); ?></pre>
+	<h2><?php echo $item->title; ?></h2>
+	<i>
+	<?php echo $item->author; ?> : <?php echo $item->modified; ?>
+	</i>
+	<pre><?php echo $this->escapeHtml($item->body); ?></pre>
+	<br />
+	<a href="<?php echo $this->url('forum-edit') . '/' . $item->forum_id; ?>">[edit]</a>&nbsp;
+	<a href="<?php echo $this->url('forum-delete') . '/' . $item->forum_id; ?>">[delete]</a>
+	<hr />
 <?php endforeach; 							?>

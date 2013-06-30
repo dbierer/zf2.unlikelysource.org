@@ -1,0 +1,8 @@
+{
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": ">=2.2.0",
+        "zf-commons/zfc-base": "dev-master",
+        "zf-commons/zfc-user": "dev-master",
+    }
+}

@@ -1,5 +1,6 @@
 <?php
 namespace RouteTest;
+use RouteTest\Entity\Storage;
 
 class Module
 {
@@ -17,5 +18,18 @@ class Module
                 ),
             ),
         );
+    }
+    
+    public function onRoute()
+    {
+    	Storage::$value[] = 'onRoute';
+    }
+    public function onDispatch()
+    {
+    	Storage::$value[] = 'onDispatch';
+    }
+    public function onRender()
+    {
+    	Storage::$value[] = 'onRender';
     }
 }

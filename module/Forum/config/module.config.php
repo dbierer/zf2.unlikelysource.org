@@ -5,6 +5,7 @@ return [
 	'controllers' => [
 		'factories' => [
 			'forum-controller-index' => 'Forum\Factory\IndexControllerFactory',
+			'forum-controller-post' => 'Forum\Factory\PostControllerFactory',
 		],
 	],
 	'service_manager' => [
@@ -19,6 +20,12 @@ return [
 				return $filter;
 			},
 		],
+	],
+	'controller_plugins' => [
+		'invokables' => [
+			'normalizeCategory' => 'Forum\Controller\Plugin\NormalizeCategory',
+			'normalizeTopic' => 'Forum\Controller\Plugin\NormalizeTopic',
+		]
 	],
 	'router' => [
 		'routes' => [
@@ -70,9 +77,31 @@ return [
                 'options' => [
                     'route'    => '/forum/post[/:category]',
                     'defaults' => [
-                        'controller' => 'forum-controller-index',
-                        'action'     => 'post',
+                        'controller' => 'forum-controller-post',
+                        'action'     => 'index',
                         'category'	 => 'zf2',
+                    ],
+                ],
+			],
+			'forum-edit' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route'    => '/forum/edit[/:id]',
+                    'defaults' => [
+                        'controller' => 'forum-controller-post',
+                        'action'     => 'edit',
+                        'id'	 	 => 0,
+                    ],
+                ],
+			],
+			'forum-delete' => [
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => [
+                    'route'    => '/forum/delete[/:id]',
+                    'defaults' => [
+                        'controller' => 'forum-controller-post',
+                        'action'     => 'delete',
+                        'id'	 	 => 0,
                     ],
                 ],
 			],

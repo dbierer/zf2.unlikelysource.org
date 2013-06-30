@@ -18,8 +18,12 @@ class ForumTable extends TableGateway
 	 */
 	public function add($data)
 	{
-		unset($data['captcha'], $data['submit'], $data['selectCategory'], $data['selectTopic']);
-		return $this->insert($data);
+		if ($data) {
+			unset($data['captcha'], $data['submit'], $data['selectCategory'], $data['selectTopic']);
+			return $this->insert($data);
+		} else {
+			return FALSE;
+		}
 	}
 	
 	/**
@@ -30,11 +34,18 @@ class ForumTable extends TableGateway
 	 */
 	public function edit($id, $data)
 	{
-		$insertData = array();
-		foreach ($this->formMappings as $key => $value) {
-			$insertData[$value] = $data[$key];
-		}
-		return $this->update($insertData, array($this->primaryKey => $id));
+		unset($data['captcha'], $data['submit'], $data['selectCategory'], $data['selectTopic']);
+		return $this->update($data, array('forum_id' => $id));
+	}
+	
+	/**
+	 * Deletes posting
+	 * @param int $id
+	 * @return boolean $result = TRUE if operation was successful
+	 */
+	public function remove($id)
+	{
+		return $this->delete(array('forum_id' => $id));
 	}
 	
 	// SELECT * FROM `forum` WHERE `forum_id` IN (SELECT MAX(`forum_id`) FROM `forum`)
@@ -64,6 +75,13 @@ class ForumTable extends TableGateway
 	// SELECT * FROM `forum` WHERE `category` = ? AND `topic` = ?
 	public function getListingsByCategoryAndTopic($category, $topic)
 	{
+		/*
+		$select = new Select();
+		$select->from(self::$tableName);
+		$select->where(array('category' => $category));
+		$select->where(array('topic' => $topic));
+		return $this->selectWith($select);
+		*/
 		return $this->select(array('category' => $category, 'topic' => $topic));	
 	}
 

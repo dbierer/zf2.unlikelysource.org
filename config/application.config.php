@@ -14,7 +14,8 @@ return array(
         'QandA',
         'RouteTest',
         'Forum',
-        'TimeLog'
+        'TimeLog',
+        'ViewTest'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

@@ -1,13 +1,19 @@
 <h1>Route Test -- <?php echo $this->name; ?></h1>
 <ul>
 <li><a href="<?php echo $this->url('routetest-hostname'); ?>">routetest-hostname</a></li>
+<?php /* the "query" route type has been deprecated as of ZF 2.1.4 ?>
 <li><a href="<?php echo $this->url('routetest-query'); ?>">routetest-query</a></li>
 <li><a href="<?php echo $this->url('routetest-query/query', array('a' => 'A')); ?>">routetest-query/query</a></li>
 <li><a href="<?php echo $this->url('routetest-query/query', array('a'=> 'A', 'b' => 'B', 'c' => 'C')); ?>">routetest-query/query, array('a'=> 'A', 'b' => 'B', 'c' => 'C')</a></li>
-<li><a href="<?php echo $this->url('routetest-wildcard/wildcard', array('a'=> 'A', 'b' => 'B', 'c' => 'C')); ?>">routetest-wildcard, array('a'=> 'A', 'b' => 'B', 'c' => 'C')</a></li>
+<?php */ ?>
+<li><a href="<?php echo $this->url('routetest-wildcard/wildcard', array('a'=> '123', 'b' => '456', 'c' => '789')); ?>">routetest-wildcard, array('a'=> 'A', 'b' => 'B', 'c' => 'C')</a></li>
 </ul>
 <hr />
+<h3>Tests the "Method" Route Type</h3>
 <form method="POST">
 <input type="text" name="name" value="NAME TEST" />
 <input type="submit" />
 </form>
+<hr />
+<h3>Module.php "on" Methods</h3>
+<?php Zend\Debug\Debug::dump(RouteTest\Entity\Storage::$value); ?>

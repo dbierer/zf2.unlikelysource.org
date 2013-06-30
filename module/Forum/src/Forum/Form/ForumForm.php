@@ -18,6 +18,8 @@ class ForumForm extends Form
 		foreach ($categoryList as $item) {
 			$categories[$item->item] = $item->item;
 		}
+
+		$author = new Element\Hidden('author');
 		
 		$category1 = new Element\Text('category');
 		$category1->setLabel('Category')
@@ -31,8 +33,8 @@ class ForumForm extends Form
 		$topic1 = new Element\Text('topic');
 		$topic1->setLabel('Topic')
 			 ->setAttribute('title', 'Enter a topic code: i.e. zf2f-2013-02-25 or use the dropdown list below')
-			 ->setAttribute('size', 16)
-			 ->setAttribute('maxlength', 16);
+			 ->setAttribute('size', 60)
+			 ->setAttribute('maxlength', 254);
 
 		$topic2 = new Element\Select('selectTopic');
 		$topic2->setValueOptions($topics);
@@ -40,8 +42,8 @@ class ForumForm extends Form
 		$title = new Element\Text('title');
 		$title->setLabel('Title')
 			 ->setAttribute('title', 'Enter a suitable title for this posting')
-			 ->setAttribute('size', 40)
-			 ->setAttribute('maxlength', 64);
+			 ->setAttribute('size', 60)
+			 ->setAttribute('maxlength', 254);
 
 		$body = new Element\Textarea('body');
 		$body->setLabel('Body')
@@ -59,7 +61,8 @@ class ForumForm extends Form
 		$submit->setAttribute('value', 'Post')
 			   ->setAttribute('title', 'Click here when done');
 		
-		$this->add($topic1)
+		$this->add($author)
+			 ->add($topic1)
 			 ->add($topic2)
 			 ->add($category1)
 			 ->add($category2)

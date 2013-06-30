@@ -26,6 +26,8 @@ class IndexController extends AbstractActionController
 		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
+	// NOTE: the "query" route type has been deprecated as of 2.1.4!
+	/*
 	public function queryAction()
 	{
     	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
@@ -36,6 +38,7 @@ class IndexController extends AbstractActionController
 		$viewModel->setTemplate('routetest/index/show-params.phtml');
 		return $viewModel;
 	}
+	*/
 	public function wildcardAction()
 	{
     	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
@@ -44,15 +47,6 @@ class IndexController extends AbstractActionController
 		$params = array_merge($this->params()->fromQuery(), $this->params()->fromRoute());
 		$viewModel = new ViewModel(array('name' => 'WILDCARD', 'params' => $params));
 		$viewModel->setTemplate('routetest/index/show-params.phtml');
-		return $viewModel;
-	}
-	public function methodGetAction()
-	{
-    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
-		$layout = $this->layout();
-		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
-		$viewModel = new ViewModel(array('name' => 'METHOD - GET'));
-		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
 	public function methodPostAction()

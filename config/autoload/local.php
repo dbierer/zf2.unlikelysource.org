@@ -20,15 +20,13 @@ return array(
 		     *
 		     * Accepted values: string
 		     */
-		    'registration-key' => array(''),
+		    'registration-key' => array(),
     		// comment out the item below and re-run http://zf2.unlikelysource.local/check
     		'check-test' => array('key' => 'FROM LOCAL.PHP', 'autoload/local.php:' . microtime()),
        	),
     ),
 	// The 'db' key has special significance
     // look at the source code for Zend\Db\Adapter\AdapterServiceFactory
-    // you will need to alter this to match your own database settings
-    // NOTE: look in /docs/data.sql for the database structure
     'db' => array(
         'driver'         => 'pdo',
         'dsn'            => 'mysql:dbname=zf2_unlikelysource_org;host=localhost',

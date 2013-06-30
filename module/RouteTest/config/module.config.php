@@ -54,6 +54,8 @@ return [
 					],
 				],
 			],
+			// NOTE: this route type has been deprecated as of ZF 2.1.4!
+			/*
 			'routetest-query' => [
 				'type' => 'Zend\Mvc\Router\Http\Segment',
 				'options' => [
@@ -70,6 +72,7 @@ return [
 					],
 				],
 			],
+			*/
 			'routetest-hostname' => [
 				'type' => 'Zend\Mvc\Router\Http\Hostname',
 				'options' => [

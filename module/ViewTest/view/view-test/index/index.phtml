@@ -1,0 +1,15 @@
+<h3>Order and Values</h3>
+<hr />
+<?php
+use ViewTest\Entity\Storage;
+Zend\Debug\Debug::dump(Storage::$order);
+Zend\Debug\Debug::dump($this->value);
+?>
+<h3>JSON Strategy</h3>
+<hr />
+<a href="/viewtest/json" target="_blank">JSON</a>
+<h3>View Helpers</h3>
+<hr />
+<br />Custom Test: <?php echo $this->customTest('Some Text'); ?>
+<br />Alt Custom Test: <?php echo $this->altCustomTest()->render('Some Text'); ?>
+<br />Base Path: <b><?php echo $this->basePath(); ?></b>

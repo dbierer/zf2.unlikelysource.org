@@ -1,6 +1,10 @@
-Contains source code for a complete ZF2 app.
-You can use the modules separately.
-NOTE: the app is configured to look for ZF2 in /vendor/ZF2
-if this is not the case, you will need to alter /public/index.php accordingly
-vendor/ZfcBase and vendor/ZfcUser are from the ZF Commons project base and user modules
-
+-- Contains source code for a complete ZF2 app.
+-- You can use the modules separately.
+-- NOTE: the app is configured to look for ZF2 in /vendor/ZF2
+   if this is not the case, you will need to alter /public/index.php accordingly
+-- vendor/ZfcBase and vendor/ZfcUser are from the ZF Commons project base and user modules
+-- You can use composer to install all dependencies as follows:
+   cd /path/to/this/directory
+   php composer.phar self-update
+   php composer.phar install
+   
