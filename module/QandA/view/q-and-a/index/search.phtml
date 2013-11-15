@@ -1,0 +1,6 @@
+<?php
+$form = $this->searchForm;
+$form->prepare();
+echo $this->form()->openTag($form);
+echo $this->formcollection($form);
+echo $this->form()->closeTag();

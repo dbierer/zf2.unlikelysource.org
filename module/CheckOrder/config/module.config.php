@@ -1,6 +1,11 @@
 <?php
 return array(
-	'service_manager' => array(
+    'navigation' => array(
+        'default' => array(
+    	   array('label' => 'CheckOrder', 'route' => 'check-order', 'order' => 1200),
+        ),
+    ),
+    'service_manager' => array(
 		'services' => array(
 			// try commenting this out and then re-run http://zf2.unlikelysource.local/check
     		'check-test' => array('key' => 'FROM MODULE.CONFIG.PHP', 'module.config.php:' . microtime()),

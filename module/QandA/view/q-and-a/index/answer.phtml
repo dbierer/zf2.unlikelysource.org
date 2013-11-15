@@ -1,0 +1,16 @@
+<?php
+$output = '';
+if (isset($this->answers) && is_array($this->answers)) {
+    $output .= '<h1>' . $this->answers[0] . '</h1>';
+    $output .= '<br />' . PHP_EOL;
+    $output .= '<pre>' . PHP_EOL;
+    foreach ($this->answers as $value) {
+        $output .= $value;
+        $output .= PHP_EOL;
+    }
+    $output .= '</pre>' . PHP_EOL;
+} else {
+    $output .= 'No answers!';
+}
+echo $output;
+?>

@@ -1,6 +1,11 @@
 <?php
 return array(
-	'service_manager' => array(
+    'navigation' => array(
+        'default' => array(
+    	   array('label' => 'ViewTest', 'route' => 'view-test', 'order' => 1500),
+        ),
+    ),
+    'service_manager' => array(
 	),
     'controllers' => array(
     	'invokables' => array(
@@ -16,6 +21,7 @@ return array(
                     'defaults' => array(
                         'controller'    => 'view-test-controller',
                         'action'        => 'index',
+                    	'must_test'		=> TRUE,
                     ),
                 ),
             ),
@@ -27,7 +33,7 @@ return array(
 			'altCustomTest' => 'ViewTest\Helper\AltCustomTest',
 			// WARNING: this will override "basePath()" system wide!!!
 			// Comment it out to revert back to the built in basePath()
-//			'basePath'	 => 'ViewTest\Helper\BasePath', 
+//			'basePath'	 => 'ViewTest\Helper\BasePath',
 		),
 	),
     'view_manager' => array(

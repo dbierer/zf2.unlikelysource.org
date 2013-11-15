@@ -1,6 +1,11 @@
 <?php
 return [
-	'controllers' => [
+    'navigation' => [
+        'default' => [
+    	   array('label' => 'RouteTest', 'route' => 'routetest-home', 'order' => 1400),
+        ],
+    ],
+    'controllers' => [
 		'invokables' => [
 			'routetest-controller-index' => 'RouteTest\Controller\IndexController',
 		],
@@ -17,6 +22,7 @@ return [
 					],
 				],
 			],
+			// NOTE: this block is also a "Part" route
 			'routetest-method-post' => [
 				'type' => 'Zend\Mvc\Router\Http\Literal',
 				'options' => [
@@ -49,7 +55,7 @@ return [
 				],
 				'may_terminate' => true,
 				'child_routes'  => [
-					'wildcard' => [
+					'wildcard-key' => [
 						'type' => 'Zend\Mvc\Router\Http\Wildcard',
 					],
 				],

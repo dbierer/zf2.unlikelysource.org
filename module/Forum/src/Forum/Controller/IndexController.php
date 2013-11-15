@@ -6,11 +6,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class IndexController extends AbstractActionController
 {
-	
+
 	public $forumTable;
 	public $forumCatList;
 	public $messages = array();
-	
+
 	public function indexAction()
 	{
 		$category = '';
@@ -24,7 +24,7 @@ class IndexController extends AbstractActionController
 					$category = $this->forumCatList[0];
 				}
 			}
-			$category = $this->normalizeCategory($category); 
+			$category = $this->normalizeCategory($category);
 			$topics = $this->forumTable->getDistinctTopicsByCategory($category);
 			$this->addForTopics($leftColumnStuff, $category);
 	    } else {
@@ -40,13 +40,13 @@ class IndexController extends AbstractActionController
 		$viewModel->setTemplate('forum/index/index.phtml');
 		return $viewModel;
 	}
-	
-	private function addForTopics(&$leftColumnStuff, $category) 
+
+	private function addForTopics(&$leftColumnStuff, $category)
 	{
 		$leftColumnStuff[] = '<br />';
 		$leftColumnStuff[] = '<h3><a href="/forum/post/' . $category . '">Post</a></h3>';
-		$leftColumnStuff[] = '<br /><form action="' 
-							. $this->url()->fromRoute('forum-home') 
+		$leftColumnStuff[] = '<br /><form action="'
+							. $this->url()->fromRoute('forum-home')
 							. '" method="GET" onClick="submit();">';
 		$leftColumnStuff[] = '<select name="category" id="forum-category-select">';
 		foreach ($this->forumCatList as $item) {
@@ -65,7 +65,7 @@ class IndexController extends AbstractActionController
 			$this->flashMessenger()->addMessage('Please specify a category');
 			return $this->redirect()->toRoute('forum-home');
 		}
-		$category = $this->normalizeCategory($category); 
+		$category = $this->normalizeCategory($category);
 		if (!$topic) {
 			$listing = $this->forumTable->getTopicsByCategory($category);
 		} else {
@@ -81,5 +81,5 @@ class IndexController extends AbstractActionController
 		$viewModel->setTemplate('forum/index/topic.phtml');
 		return $viewModel;
     }
-    
+
 }

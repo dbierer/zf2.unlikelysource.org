@@ -21,20 +21,18 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-        //$eventManager->attach('dispatch', array($this, 'onDispatch'), 100);
+        $eventManager->attach('dispatch', array($this, 'onDispatch'), 100);
         // test code matching ZF2F slide 8-12
         //$eventManager->attach('render', array($this, 'registerJsonStrategy'), 100);
     }
 
-    // NOTE: not used right now
 	public function onDispatch(MvcEvent $e)
 	{
-		// get template params
-        $templateParams = $e->getApplication()->getServiceManager()->get('application-template-params');
+	    $sm = $e->getApplication()->getServiceManager();
 		// get view model
 	 	$vm = $e->getViewModel();
 	 	// store search info in a variable
-	 	$vm->setVariable('templateParams', $templateParams);
+	 	$vm->setVariable('leftColumnMenu', $sm->get('navigation-left-col'));
 	}
 
     // NOTE: not used right now

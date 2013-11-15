@@ -7,7 +7,7 @@ use Zend\Captcha;
 
 class ForumForm extends Form
 {
-	public function prepareElements($topicList, $categoryList)
+	public function prepareElements($topicList, $categoryList, $captchaOptions)
 	{
 		// repurpose $topicList and $categoryList
 		$topics = array('---' => 'Choose');
@@ -20,7 +20,7 @@ class ForumForm extends Form
 		}
 
 		$author = new Element\Hidden('author');
-		
+
 		$category1 = new Element\Text('category');
 		$category1->setLabel('Category')
 			 ->setAttribute('title', 'Enter a category: i.e. zf2 or use the dropdown list below')
@@ -29,7 +29,7 @@ class ForumForm extends Form
 
 		$category2 = new Element\Select('selectCategory');
 		$category2->setValueOptions($categories);
-		
+
 		$topic1 = new Element\Text('topic');
 		$topic1->setLabel('Topic')
 			 ->setAttribute('title', 'Enter a topic code: i.e. zf2f-2013-02-25 or use the dropdown list below')
@@ -38,7 +38,7 @@ class ForumForm extends Form
 
 		$topic2 = new Element\Select('selectTopic');
 		$topic2->setValueOptions($topics);
-		
+
 		$title = new Element\Text('title');
 		$title->setLabel('Title')
 			 ->setAttribute('title', 'Enter a suitable title for this posting')
@@ -52,15 +52,18 @@ class ForumForm extends Form
 			->setAttribute('cols', 60);
 
 		$captcha = new Element\Captcha('captcha');
-		$captchaAdapter = new Captcha\Dumb();
-		$captchaAdapter->setWordlen(4);
+		$captchaAdapter = new Captcha\Image();
+		$captchaAdapter->setWordlen(4)
+					   ->setOptions($captchaOptions);
 		$captcha->setCaptcha($captchaAdapter)
+				->setLabel('Help us to prevent SPAM!')
+				->setAttribute('class', 'captchaStyle')
 			    ->setAttribute('title', 'Help to prevent SPAM');
-		
+
 		$submit = new Element\Submit('submit');
 		$submit->setAttribute('value', 'Post')
 			   ->setAttribute('title', 'Click here when done');
-		
+
 		$this->add($author)
 			 ->add($topic1)
 			 ->add($topic2)
@@ -71,4 +74,4 @@ class ForumForm extends Form
 			 ->add($captcha)
 			 ->add($submit);
 	}
-} 
+}

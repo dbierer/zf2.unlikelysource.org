@@ -1,0 +1,15 @@
+<?php
+/*
+ * You need to provide a location for the Q and A text file
+ * Then copy this file to /config/autoload/q-and-a.local.php
+ */
+return array(
+	'q-and-a' => array(
+	    // text file containing Q and A
+		'data-file' => __DIR__ . '/../../data/q-and-a/q-and-a.txt',
+	    // marks the start of a question; should be flush left in the text file
+	    'question'  => 'Q: ',
+	    // marks the start of an answer; should be flush left in the text file
+	    'answer'    => 'A: ',
+	),
+);

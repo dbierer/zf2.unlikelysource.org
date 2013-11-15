@@ -10,7 +10,9 @@ class IndexController extends AbstractActionController
 	
 	public function indexAction()
 	{
-		return new ViewModel(array('value' => $this->value));
+		$viewModel = new ViewModel(array('value' => $this->value));
+//		$viewModel->setTerminal(TRUE);
+		return $viewModel;
 	}
 	public function jsonAction()
 	{

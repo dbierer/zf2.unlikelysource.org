@@ -25,8 +25,7 @@ echo $this->form()->openTag($form);
 <!-- End Red -->
 <p>&nbsp;</p>
 <?php echo $this->formHidden($form->get('author')); ?>
-<?php echo $this->formSubmit($form->get('submit')); ?>
-<?php echo $this->form()->closeTag($form); ?>
+<?php echo $this->formSubmit($form->get('submit')); ?><?php echo $this->form()->closeTag($form); ?>
 <p>&nbsp;</p>
 <p>
 Form Data Submitted:

@@ -1,0 +1,14 @@
+<?php
+if (isset($this->questions) && $this->questions instanceof Zend\Paginator\Paginator) {
+	echo '<ul>' . PHP_EOL;
+	foreach ($this->questions as $key => $value) {
+		echo '<li>';
+		echo '<a href="/q-and-a/ans/' . $key . '"/>';
+		echo $value;
+		echo '</a></li>' . PHP_EOL;
+	}
+	echo '</ul>' . PHP_EOL;
+	echo $this->paginationcontrol($this->questions, 'sliding', 'q-and-a/partials/pagination.phtml');
+} else {
+	echo 'No questions!';
+}

@@ -1,0 +1,19 @@
+<?php
+/**
+ * Has dependency on ZfcUser!!! (in Module.php)
+ * Looks for labs_and_classes.ini file in /data/zf2f:
+ * 
+services.zf2f.class.20130722 = "20130722"
+
+services.zf2f.notes.mod_02 = "Module 2 (Project) LAB SETUP NOTES"
+services.zf2f.notes.mod_03 = "Module 3 (Events) LAB SETUP NOTES"
+services.zf2f.notes.mod_04 = "Module 4 (Services) LAB SETUP NOTES"
+
+services.zf2f.solutions.mod_03 = "Module 3 (Events) LAB SOLUTIONS"
+services.zf2f.solutions.mod_04 = "Module 4 (Services) LAB SOLUTIONS"
+
+ */
+$configFile = __DIR__ . '/../../data/zf2f/labs_and_classes.ini';
+$configReader = new Zend\Config\Reader\Ini();
+$config = $configReader->fromFile($configFile);
+return ['service_manager' => $config];

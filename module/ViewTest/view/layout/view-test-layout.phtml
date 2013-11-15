@@ -1,0 +1,256 @@
+<?php
+// zfcUser authentication stuff
+$user = $this->zfcUserIdentity();
+if ($user) {
+	$name = $this->zfcUserDisplayName();
+} else {
+	$name = 'guest';
+}
+// template stuff
+$template = array(
+		'margin' 			=> 30,
+		'outermargin' 		=> 0,
+		'title' 			=> 'zf2.unlikelysource.org',
+		'logoText' 			=> 'zf2.unlikelysource.org',
+		'slogan'			=> '',
+		'logo'				=> '<img src="http://www.unlikelysource.com/assets/images/zf-zce-logo.gif" />',
+		'banner'			=> '',
+		'pageWidth'			=> 960,
+		'rightColumnWidth'	=> 190,
+		'leftColumnWidth'	=> 190,
+		'logoWidth'			=> 500,
+		'removeBanner' 		=> true,
+		'searchWidth' 		=> 170,
+		'searchHeight' 		=> 33,
+		'showLeftColumn' 	=> true,
+		'showRightColumn' 	=> true,
+);
+$showLeftColumn		= TRUE;
+$showRightColumn 	= isset($this->position_6);
+$pageWidth			= $template['pageWidth'] - $template['outermargin'];
+
+if(isset($this->position_0)){
+	$searchWidth = $template['searchWidth'];
+} else {
+	$searchWidth = 0;
+}
+$headerrightWidth = $pageWidth + $template['outermargin'] - $template['logoWidth'] - 50;
+if ($showLeftColumn && $showRightColumn) {
+   $contentWidth = $pageWidth - $template['leftColumnWidth'] - $template['rightColumnWidth'] - (3 * $template['margin']);
+} elseif (!$showLeftColumn && $showRightColumn) {
+   $contentWidth = $pageWidth - $template['rightColumnWidth'] - (2 * $template['margin']);
+} elseif ($showLeftColumn && !$showRightColumn) {
+   $contentWidth = $pageWidth - $template['leftColumnWidth'] - (2 * $template['margin']);
+} else {
+   $contentWidth = $pageWidth - $template['margin'];
+}
+
+?>
+<?php echo $this->doctype(); ?>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<?php echo $this->headTitle($template['title']); ?>
+<?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+<!-- Le styles -->
+<?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/images/favicon.ico?v=2'))
+                ->prependStylesheet($this->basePath() . '/css/template.css')
+//                ->prependStylesheet($this->basePath() . '/css/black.css')
+                ->prependStylesheet($this->basePath() . '/css/grey.css')
+?>
+<!-- Scripts -->
+
+<!--[if IE 6]>
+<link rel="stylesheet" href="/css/ie6.css" type="text/css" />
+<style type="text/css">
+img, div, a, input { behavior: url(/iepngfix.htc) }
+</style>
+<script src="/js/iepngfix_tilebg.js" type="text/javascript"></script>
+<![endif]-->
+<!--[if lte IE 7]>
+<link rel="stylesheet" href="/css/ie67.css" type="text/css" />
+<![endif]-->
+
+<style type="text/css">
+body {
+	background-color: #FFFF66;
+}
+#logo {
+    width:<?php echo $template['logoWidth']; ?>px;
+ }
+ #headerright {
+    width:<?php echo $headerrightWidth; ?>px;
+	<?php if(isset($template['banner']) || $template['removeBanner']) : ?>
+       background: none;
+    <?php endif; ?>
+ }
+ #search {
+   width:<?php echo $searchWidth; ?>px;
+   height:<?php echo $template['searchHeight']; ?>px;
+ }
+ .size-10 {
+    font-size: 6pt;
+ }
+ .captcha_class {
+    float: left;
+    margin: 10px;
+ }
+ .etherpad_messages {
+	color: purple;
+ }
+ #auth_name {
+	width: 190px;
+ }
+ #auth_pwd {
+	width: 190px;
+ }
+ #auth_captcha-input {
+	width: 190px;
+ }
+ #forum-category-select {
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+ 	width: 120px;
+    font-size: 12px;
+ }
+input[type="text"] {
+	font-size: 11px;
+}
+input[type="submit"] {
+	font-size: 11px;
+}
+</style>
+</head>
+<body>
+
+<div id="allwrap" class="gainlayout" style="width:<?php echo $pageWidth + $template['outermargin']; ?>px;">
+
+<div id="headerwrap" class="gainlayout">
+  <div id="header" class="gainlayout">
+      <div id="logo" class="gainlayout">
+        <?php if(isset($template['logo'])) : ?>
+          <?php echo $template['logo']; ?>
+        <?php endif; ?>
+      &nbsp;&nbsp;
+      <span style="font: bold 24pt helvetica sans;">
+      	<a href="#" title="<?php echo $this->escapeHtml($template['logoText']); ?>"><?php echo $this->escapeHtml($template['logoText']); ?></a>
+      </span>
+      </div>
+	  <div id="headerright" class="gainlayout">
+        <?php if(isset($template['banner'])) : ?>
+          <div id="banner">
+          <?php echo $template['banner']; ?>
+          </div>
+        <?php endif; ?>
+        <div class="clr"></div>
+      </div>
+      <div class="clr"></div>
+  </div>
+  <div class="clr"></div>
+</div>
+
+<div id="topmenuwrap" class="gainlayout">
+	<div id="topmenu" class="gainlayout">
+	<?php /* ?>
+	<?php if (strpos($_SERVER['SERVER_ADDR'], '127.') === 0) : ?>
+		<span class="menu"><a href="http://zf2.unlikelysource.local/">Home</a></span>&nbsp;&nbsp;
+	<?php else : ?>
+		<span class="menu"><a href="http://zf2.unlikelysource.org/">Home</a></span>&nbsp;&nbsp;
+	<?php endif; ?>
+	<?php if ($name != 'guest') : ?>
+		<span class="menu"><a href="<?php echo $this->basePath(); ?>/zf2f">ZF2F</a></span>&nbsp;&nbsp;
+	<?php endif; ?>
+	<span class="menu"><a href="<?php echo $this->basePath(); ?>/check">CheckOrder</a></span>&nbsp;&nbsp;
+	<span class="menu"><a href="<?php //echo $this->basePath(); ?>/routetest/">RouteTest</a></span>&nbsp;&nbsp;
+	<span class="menu"><a href="<?php //echo $this->basePath(); ?>/viewtest/">ViewTest</a></span>&nbsp;&nbsp;
+	<span class="menu"><a href="<?php echo $this->basePath(); ?>/forum">Forum</a></span>&nbsp;&nbsp;
+	<span class="menu"><a href="<?php echo $this->basePath(); ?>/q-and-a">Q & A</a></span>&nbsp;&nbsp;
+	<?php if ($name == 'guest') : ?>
+		<span class="menu"><a href="<?php echo $this->basePath(); ?>/user/login">Login</a></span>
+	<?php else : ?>
+		<span class="menu"><a href="<?php echo $this->basePath(); ?>/user/logout">Logout</a></span>
+	<?php endif; ?>
+	<?php */ ?>
+	<?php echo $this->navigation()
+	                ->menu('navigation-main-menu')
+	                ->setUlClass('menu')
+	                ->render(); ?>
+	</div>
+	<div class="clr"></div>
+  	<?php if(isset($this->position_0)) : ?>
+        <div id="search" class="gainlayout">
+          <?php echo $this->position_0; ?>
+		<div class="clr"></div>
+        </div>
+  	<?php endif; ?>
+  	<div class="clr"></div>
+</div>
+
+<div id="wrap" class="gainlayout">
+
+  <?php if(isset($this->position_2)) : ?>
+	  <div id="pathway" class="gainlayout">
+        <?php echo $this->position_2; ?>
+      <div class="clr"></div>
+	  </div>
+  <?php endif; ?>
+  <div id="cbody" class="gainlayout">
+
+  <!--  Left Column -->
+  <div id="sidebar" style="width:<?php echo $template['leftColumnWidth']; ?>px;">
+  	  Welcome <?php echo $name; ?>
+  	  <br />
+      <?php
+      	// left column menu
+      	if (isset($this->leftColumnMenu)) {
+            echo $this->navigation()->menu('navigation-left-col')->render();
+        }
+      ?>
+      <h3>Source Code:</h3>
+      Click here to access the source code for this website:
+      <br />
+	  <a href="https://github.com/dbierer/zf2.unlikelysource.org" target="_blank">https://github.com/dbierer/zf2.unlikelysource.org</a>
+      <p>&nbsp;</p>
+      <h3>General Notes:</h3>
+      <ul>
+      <li>IE Users: bote that you may have to set "compatibility" mode on!</li>
+      <li>PHP 5.4 is required for this application to work!</li>
+      </ul>
+      <?php if (isset($this->leftColumnStuff)) : 									?>
+      	<?php foreach ($this->leftColumnStuff as $item) { echo $item . PHP_EOL; } 	?>
+      <?php endif;																	?>
+  </div>
+  <!-- End Left Column -->
+
+  <div id="content60" style="width:<?php echo $contentWidth ?>px;">
+
+      <div id="content" class="gainlayout">
+      <?php echo $this->content; ?>
+      </div>
+  </div>
+  <?php if($showRightColumn) : ?>
+  <div id="sidebar-2" style="width:<?php echo $template['rightColumnWidth']; ?>px;">
+      <?php echo $this->position_6; ?>
+  </div>
+  <?php endif; ?>
+  <div class="clr"></div>
+  </div>
+
+<!--end of wrap-->
+</div>
+
+<!--end of allwrap-->
+</div>
+<div id="footerwrap" class="gainlayout" style="width:<?php echo $pageWidth + $template['outermargin']; ?>px;">
+  <div id="footer" class="gainlayout">
+       <?php if(isset($this->position_14)) : ?>
+         <?php echo $this->position_14; ?>
+       <?php endif; ?>
+  </div>
+  <div id="unlikelysource-footer">
+  &copy; 2013 <a href="http://unlikelysource.com/">unlikelysource.com</a> all rights reserved
+  &nbsp;|&nbsp;Zend Framework Version: <?php echo Zend\Version\Version::VERSION; ?>
+  &nbsp;|&nbsp;PHP Version: <?php echo phpversion(); ?>
+  </div>
+  </div>
+</body>
+</html>

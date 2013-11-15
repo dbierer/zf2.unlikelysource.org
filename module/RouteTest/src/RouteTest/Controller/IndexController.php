@@ -12,6 +12,12 @@ class IndexController extends AbstractActionController
 		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
+	public function moduleTestAction()
+	{
+		$viewModel = new ViewModel(array('name' => 'MODULE TEST'));
+		$viewModel->setTemplate('routetest/index/index.phtml');
+		return $viewModel;
+	}
 	public function hostnameAction()
 	{
 		if (strpos($_SERVER['SERVER_ADDR'], '127.') === 0) {

@@ -1,0 +1,970 @@
+Q: How do you configure Zend Server / nginx for ZF2 apps?
+A: Create an include file which accounts for PHP and rewriting (call it /etc/nginx/conf.d/zf.inc):
+
+location / {
+	try_files $uri @rewrite;
+}
+
+location @rewrite {
+	rewrite ^/(.*)$ /index.php;
+}
+
+location ~* \.(gif|jpg|png)$ {
+	expires 30d;
+}
+
+location ~ \.php$ {
+	fastcgi_pass  unix:/usr/local/zend/tmp/php-fpm.sock;
+	fastcgi_param SCRIPT_FILENAME
+				  $document_root$fastcgi_script_name;
+	include       fastcgi_params;
+}
+
+For each virtual server you wish to configure for your ZF1 or ZF2 apps, add a "server" directive, specify the server name, and include the file created above:
+
+server {
+    listen      80;
+    server_name virtual.server.name;
+    root        /path/to/zf/app/public;
+   include /etc/nginx/conf.d/zf.inc;
+}
+
+NOTE: make sure the root directive maps to the public directory of your ZF app.
+
+See this article for more information:
+
+http://blogs.sakienvirotech.com/index.php/random/2011/08/25/using-zend-framework-or-drupal
+
+Q: Examples of using a hydrator with a class
+A: ZfcBase\Mapper\AbstractDbMapper
+
+Q: How do you do a redirect from Module.php
+A: 
+$response = new \Zend\Http\PhpEnvironment\Response();        
+$response->getHeaders()->addHeaderLine('Location', $url);        
+$response->setStatusCode(302);        
+return $response;
+
+Q: Does it mean that an unshared service will return a NEW instance each time you access it using get()?
+A: Shared services are added to a property ServiceManager::$instances
+   When a shared service is retrieved via get(), it looks into $instances[] first, otherwise creates and stores into $instances[]
+   If not shared, or if sharedByDefault == FALSE, returns a unique instance (which is *not* stored in $instances)
+   See: Zend\ServiceManager\ServiceManager.php::get()
+
+Q: guestbook/service\entry --> where are the events attached?
+A: add.post is attached in GuestbookNotification\Module::onBootstrap()
+
+Q: For now there are there a lot of the concepts inside my head. I would like to ask to have some real world problems, or use cases, that can be implemented using all these concepts, is that possible?
+A: Real world examples will have to wait until after we discuss Services and MVC
+A: Have a look at vendor/ZendFramework/library/Zend/Mvc/Application.php::bootstrap()
+   Attaching Listeners: RouteListener, DispatchListener, and ViewManager
+   Triggering Events: MvcEvent::EVENT_BOOTSTRAP; see also run()
+A: Another example:
+   1. Zend\Mvc\RouteListener::attachs the "onRoute" callback to an EVENT_ROUTE event
+   2. Zend\Mvc\Application::run() triggers EVENT_ROUTE
+   3. Zend\Mvc\RouteListener::onRoute() handles the event
+
+Q: Where do you get the Zend Skeleton App?
+A: https://github.com/zendframework/ZendSkeletonApplication
+
+Q: Why AbstractController or AbstractActionController?
+A: AbstractActionController extends AbstractController
+   AbstractController is used by other controller classes, e.g. AbstractRestfulController
+   see: https://github.com/zendframework/zf2/blob/master/library/Zend/Mvc/Controller/AbstractRestfulController.php
+
+Q: What is the order of the module level listeners?
+A: From "DefaultListenerAggregate" :
+
+Listener		Module.php method		Interface (Zend\ModuleManager\Feature\*)
+--------		-----------------		----------------------------------------
+AutoloaderListener	getAutoloaderConfig()		AutoloaderProviderInterface
+ConfigListener		getConfig()			ConfigProviderInterface
+InitTrigger		init()				InitProviderInterface
+
+
+Q: Zend\ModuleManager\ModuleManager::__construct() calls setEventManager() which then calls attachDefaultListeners(), but where are the default listeners actually attached?
+
+A: [MWOP] The default listeners are attached in the ModuleManager factory,
+Zend\Mvc\Service\ModuleManagerFactory. Technically, they're attached via
+the Zend\ModuleManager\Listener\DefaultListenerAggregate, which is
+attached to the MM's event manager instance within that factory.
+
+Q: Slide 2-8: What events do these listen to?
+A: see Zend\ModuleManager\ModuleManager::attachDefaultListeners()
+   The "loadModules" event:
+    protected function attachDefaultListeners()
+    {
+        $events = $this->getEventManager();
+        $events->attach(ModuleEvent::EVENT_LOAD_MODULES, array($this, 'onLoadModules'));
+    }
+
+Q: Test not tests, view or views???  Code should follow recommended coding standards.
+A: http://framework.zend.com/manual/2.0/en/modules/zend.mvc.intro.html
+
+Q: $event->trigger(x, y, z, callback) -- when would you define callback?
+A: If you want "trigger" to behave as "triggerUntil()".  Keeps triggering until callback returns TRUE.
+
+Q: Are there any concrete examples of using module level /public assets???
+A: [MWOP] http://mwop.net/blog/why-conventions-matter.html
+
+Also, https://github.com/RWOverdijk/AssetManager is a module for
+managing those assets and pushing them into the document root.
+
+Q: what about validating array values? what if i have $_POST['users'][1]['email']?
+A: from Manuel to All Participants: ??? maybe:
+> form collections would be validated on per collection element basis
+> For such things i recommend >
+> http://www.michaelgallego.fr/blog/2012/07/04/new-zendform-features-explained/
+
+That's exactly the document I'd recommend. Interestingly, Michael
+allowed us to adapt that for the manual.
+
+Q: Are there any code examples of using identifiers with EventManager? How are identifiers useful and how are they used?
+
+A: Identifiers are a way to create communication between an individual
+EventManager instance and the SharedEventManager. This allows you to
+connect a listener to an event without having direct access to the given
+EventManager instance or the object that composes it.
+
+As an example, consider the various view listeners in ZF2 itself. As an
+example, there's one that will take a returned array from a controller,
+and create a ViewModel out of it. This listens on the
+"Zend\Stdlib\DispatchableInterface" context -- which means that any
+object that defines that context will trigger that listener if it
+triggers the appropriate event.
+
+Q: Examples of service manager initializers?
+A: Initializers are run after the service is created (i.e. an init() method)
+   See: Zend\ServiceManager\ServiceManager.php::get() and create()
+   -- Are called after instance is created
+   See: ZfcBase\Mapper\AbstractDbMapper::initialize()
+   -- this is an example of a method which is called after the service instance is created in ServiceManager::create()
+
+Q: Are there any code examples of using initializers with ServiceManager? It is clear that initializers are useful ... but exactly how are they used?
+A: [MWOP] In ZF2 itself, we do it for two things immediately:
+
+ * Any class that implements Zend\ServiceManager\ServiceLocatorAwareInterface
+   will be injected with the ServiceManager instance, via an initializer.
+ * Any class that implements Zend\EventManager\EventManagerAwareInterface
+   will be injected with an EventManager instance, via an initializer.
+
+Q: from Paul to All Participants: re: events: do aggregate results get passed around in $context or $params?
+A: No. No listener is aware of the results of a previous listener, unless
+that listener expressly injects the result into the event.
+
+Q: When exactly would you use a listener aggregate?  Can you show me a code example?
+A: [MWOP] Let's say I have a class that has some sort of state, and has multiple
+methods that can act as listeners on different events. Instead of having
+to do this:
+
+    $events->attach('some.event', array($object, 'onSomeEvent'));
+    $events->attach('other.event', array($object, 'onOtherEvent'));
+
+You can instead implement ListenerAggregateInterface, and simply do
+this:
+
+    $events->attach($object);
+
+and have the object manage the various attach() calls internally.
+
+There are a few such aggregates in the Zend\Mvc namespace, as well as
+Zend\Form\Annotation.
+
+Q: Are there any Zend\Db adapters for Oracle???
+A: Yes: available as of ZF 2.1
+
+Q: Okay, so if the service key is camelCase, then directories can be camelCase as well ... or do we have to use the "-" syntax?
+A: [MWOP] Service keys are case insensitive, and, further, strip out non alpha-numeric characters. 
+They have nothing to do with the name of directories nor the name of classes; they're completely arbitrary.
+
+I'm assuming that the question is related to how _view_ directories are
+named. We came up with a convention of having those match a normalized
+module name, normalized controller name, and normalized action name. The
+rationale is to make them as compatible as possible with multiple
+scripting engines.
+
+Q: Now all this is all event driven.. does the eventmanager have some kind of console log for debug?
+A: [MWOP] Not by default -- but you can enable one quite easily:
+
+    $sharedEvents->attach('*', '*', function ($e) use ($logger) {
+        $normalized = array();
+        foreach ($e->getParams() as $key => $value) {
+            if (!is_object($value)) {
+                $normalized[$key] = $value;
+                continue;
+            }
+            $normalized[$key] = 'Class of type "' . get_class($value) .  '"';
+        }
+        $data = json_encode(array(
+            'event'  => $e->getName(),
+            'target' => get_class($e->getTarget()),
+            'params' => $normalized,
+        ));
+        $logger->log($data);
+    });
+
+Q: What is the order of these listeners?  What events do these listen to?
+
+A: 
+>
+> Listener        	Module.php method        Interface (Zend\ModuleManager\Feature\*)
+> --------        	-----------------        ----------------------------------------
+> AutoloaderListener    getAutoloaderConfig()    AutoloaderProviderInterface
+> ConfigListener        getConfig()            	 ConfigProviderInterface
+> InitTrigger        	init()                	 InitProviderInterface
+> DefaultListenerAggregate
+
+[MWOP] All of the above listen to the "loadModule" event. The
+AutoloaderListener and ConfigListener are registered earliest, ensuring
+that init and onBootstrap listeners have autoloading enabled for their
+respective modules.
+
+Q: What is the DefaultListenerAggregate?  What is it used for?
+A: It defines and wires the default ModuleManager listeners to utilize.
+These include:
+
+ * ModuleLoaderListener
+ * ModuleResolverListener
+ * AutoloaderListener
+ * InitTrigger
+ * OnBootstrapListener
+ * LocatorRegistrationListener
+ * ConfigListener
+
+The first two are around autoloading and instantiating individual Module
+classes as configured in the application. The next three, and the last
+one, we cover in the course. The LocatorRegistrationListener looks for
+modules that are marked with the LocatorRegisteredInterface; when found,
+a service will be registered in the service manager with the Module
+class name, pointing to the module instance. (This is a nice way to
+share module-specific configuration between controllers in a module.)
+
+Q: view or views???  Code should follow recommended
+A: from Roman to All Participants:
+http://framework.zend.com/manual/2.0/en/modules/zend.mvc.intro.html
+
+Q: RE: directory naming convention, why should we use "test" but not "tests"?
+A: [MWOP] We decided that for consistency, we would name all directories in a
+module in the singular: config, public, test, view, etc. This is a
+departure from ZF1, where most, but not all, were in the plural. It's
+really an arbitrary point; you can name them however you want, as it's
+up to you to tell the MVC where to find things. We simply went one
+specific direction in the recommended structure.
+
+Q: $event->trigger(x, y, z, callback) -- when would you define callback?
+A: [MWOP] The callback used with trigger() is used to test the return value of
+individual listeners; returning a boolean true value from this callback
+will halt execution of the event loop. The rationale can be seen in the
+MVC, where if a Response is detected as being returned from a listener,
+we halt execution of the event loop and return immediately. As an
+example:
+   
+    $results = $events->trigger('dispatch', $this, $mvcEvent, function ($result) {
+        if ($result instanceof Response) {
+            return true;
+        }
+    });
+    if ($results->stopped()) {
+        return $results->last(); // if we were halted due to the
+                                 // callback, return the last result now
+    }
+
+
+Q: Are there multiple module managers or is there only one as a singleton?  When is the module manager created?
+A: [MWOP] In the default ZF2 implementation, there's only one module manager, but
+it's not a singleton. The instance is retrieved from the ServiceManager
+as part of Application::init(), and this is also when loadModules() is
+called. Because it is a shared instance, pulling it out of the
+ServiceManager ensures you get the same instance each time.
+
+If you don't use Application::init(), you either have to pull it from
+the ServiceManager yourself, or instantiate it yourself.
+
+Q: Do you have any examples of an Abstract_Factory service?
+A: [MWOP] An AbstractFactory is used when you want to create a single factory to
+handle a group of related object types. An example might be for handling
+plugins:
+
+    class PluginAbstractFactory implements AbstractFactoryInterface
+    {
+        protected $plugins = array(
+            'foo',
+            'bar',
+            'baz',
+        );
+
+        public function canCreateServiceWithName(ServiceLocatorInterface $services, $name, $requestedName)
+        {
+            return in_array($requestedName, $this->plugins);
+        }
+
+        public function createServiceWithName(ServiceLocatorInterface $services, $name, $requestedName)
+        {
+            if (!in_array($requestedName, $this->plugins)) {
+                throw new ServiceNotFoundException();
+            }
+
+            $class   = __NAMESPACE__ . '\\' . ucfirst($requestedName) .  'Plugin';
+            $manager = $services->get('PersistenceManager');
+            $plugin  = new $class($manager);
+            return $plugin;
+        }
+    }
+
+The basic idea is that it can handle creation of a group of related
+objects, and might need to automatically inject dependencies as part of
+creation.
+
+Q: Why group listeners?
+A: [MWOP] Because they may require access to stateful information that should be
+shared across several listeners. As an example, the RouteNotFound
+composes configuration values that come into play in multiple listener
+end points, and are thus used to shape the view selected and what values
+are passed to it via the ViewModel.
+
+In other cases, the listeners may be related to a given context, and,
+while they do not share state, grouping them in a single class is
+logical, and makes attaching the listeners much more convenient; for
+good exmples look at Zend\Form\Annotation\FormAnnotationsListener and
+ElementAnnotationsListener.
+
+Q: How do you do a redirect from Module.php?
+A: [MWOP] Depends on what you're trying to accomplish. If you register a listener
+to any of the "route" or "dispatch" events, or to a "dispatch" event on
+the "Zend\Stdlib\DispatchableInterface" shared context, you can initiate
+a redirect by returning a response that has a 301 or 302 header with a
+Location header value set. As such, you'd do the above in a listener
+callback.
+
+Q: How do you register a custom view helper?
+A: $instanceOfHelper = new My_New_Helper();
+   $view->getBroker()->register('helper', $instanceOfHelper);
+A: In the module.config.php file:
+   'view_helpers' => ['invokables' => 'Class\Name\Of\Helper']
+
+Q: Do you have any examples of custom view helpers?
+A: See the following for several view helpers:
+
+    https://github.com/weierophinney/PhlyPaste/tree/master/src/PhlyPaste/View
+
+and this for how they are registered in that module:
+
+    https://github.com/weierophinney/PhlyPaste/blob/master/config/module.config.php#L44-50
+
+Q: In module.config.php, why have a separate "controllers" key, why not use "service_manager"?
+A: [MWOP] If you were to define a route that allowed specifying the controller
+dynamically, such as this:
+
+    'route' => '/foo/:controller/:action'
+
+and we defined controllers in the application service manager instance,
+that means an attacker could substitute any service name they wanted,
+and the service would be retrieved. This has a number of security
+implications:
+
+ * If the service has any side effects from the constructor or methods
+   called in a factory, these would be triggered.
+ * If the "controller" retrieved does not implement the
+   DispatchableInterface, we get notified late -- which leads to a
+   potential DoS attack.
+
+As such, our security team decided that we should err on the side of
+explicitness, and pull controllers from an isolated plugin manager. This
+allows us to err early when an unknown service is specified, as well as
+raise a context-specific exception when the service retrieved does not
+implement the required interface.
+
+ALSO:
+The "controllers" configuration is for a specialized service manager
+instance dedicated to controllers. It is *not* part of the service
+manager at all; however, it *composes* the main service manager
+instance.
+
+The reason it is separate is as a security measure. Since many
+developers create routes allowing specifying the controller name via URL
+(e.g., segment routes with a ":controller" segment), there's a potential
+problem: if the controller name matches an existing service, but that
+service is not a controller, or that service has side effects that occur
+during initialization, we open the door for DoS vectors and other
+attacks on our system.
+
+By moving the controller initialization into a plugin manager, we can
+ensure that if the controller requested does not have a match in the
+plugin manager, we will not try and load it (basically, we are using a
+whitelist approach; the controller must be in the set of services the
+controller manager defines); additionally, we can ensure that if the
+controller loaded is not a valid controller, we raise an exception
+early.
+
+Because the SM is composed into the controller manager,
+we can still access other services for purpose of injection; this can be
+done as follows:
+
+    function ($controllers) {
+        $services = $controllers->getServiceLocator();
+        $foo      = $services->get('foo');
+
+        $controller = new Controller\SomeController;
+        $controller->setFoo($foo);
+        return $controller;
+    }
+
+Note how I use semantically named arguments -- when I write a service
+factory for returning a controller, I name the ServiceLocatorInterface
+argument "$controllers", so that I know that this is not the main
+service manager. I do the same with view helpers ("$helpers") and
+controller plugins ("$plugins"). I've found that when I use this in
+examples, it also helps clarify the relationship between plugin manager
+instances and the service manager.
+
+SplAutoloader is an interface in Zend\Loader -- it's not a PHP interface
+or class (full name is Zend\Loader\SplAutoloader). It's a ZF2 interface
+that describes a class that provides autoloading that will be queued
+with spl_autoload_register().
+
+
+Q: In config_glob_paths what does the wildcard markup mean ex: {,*.}
+A: It meas no chars or all chars . global or local .php
+
+Q: If you want a REST controller, do you subclass Abstract Controller or RestController
+A: Use AbstractRestfulController
+
+Q: Database lab: SQLSTATE error file not found
+A: first, try changing db host to 127.0.0.1
+if that doesn't work, do this:
+ln -s /var/run/mysql/mysqld.sock /tmp/mysql.sock
+See: http://stackoverflow.com/questions/1819592/error-when-connecting-to-mysql-using-php-pdo
+
+Q: Do the templates have to be within the module? or could you have something global?
+A: Templates, or view scripts, are module specific
+
+Q: What gets returned in an event listener callback when you say $e->getTarget()?
+A: Whatever was the "context" when the event is triggered
+
+Q: Can you trigger multiple actions ** in a single dispatch?
+A: No.  
+   Zend\Mvc\AbstractController::dispatch() dispatches a single Request only (not an array)
+   Zend\Mvc\Controller\Plugin\Forward::dispatch() dispatches a controller represented by its name in the form of a string (not an array)
+
+Q: Why does the database lab test solution use this syntax: $this->MessagesTable->delete(function() {});
+A: $table->delete() has a mandatory parameter which can be any of:
+   Where|\Closure|string|array $where
+A: You could also use $this->MessagesTable->delete(TRUE);
+
+Q: What is the use for Zend\Db\TableGateway\Feature\GlobalAdapterFeature::setStaticAdapter($adapter)?
+A: This is an alternate approach to setting the adapter as a service.
+   Use Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter()
+   to return an instance when constructing tables, etc.
+
+Q: Can you send a sql string into the sql object?
+A: No -- the Zend\Db\Sql\Sql object is for SQL abstraction; internally,
+it's storing a tokenized expression that is then rendered as SQL.
+
+You _can_ use the Expression object, however, for segments where you
+want to provide literal SQL expressions inside your Sql instance.
+
+Q: Is there documention on service keys?
+A: Yes:
+
+    http://framework.zend.com/manual/2.0/en/modules/zend.service-manager.quick-start.html#using-configuration
+
+
+Q: How would you build these SQL statements using Zend\Db\Sql\Select: "SELECT title FROM albums WHERE id IN(SELECT DISTINCT id FROM notfoundlog);" and "SELECT colA,colB FROM tableA WHERE tableA.colA = (SELECT max(colC) FROM tableB)"?
+
+A: 
+SELECT title FROM albums WHERE id IN(SELECT DISTINCT id FROM notfoundlog);
+SELECT colA,colB FROM tableA WHERE tableA.colA = (SELECT max(colC) FROM tableB)
+
+[MWOP] This is really asking about two features not covered in the DB module.
+
+The first is expressions, the second, subselects.
+
+Expressions are simple: you instantiate a Zend\Db\Sql\Expression object,
+passing the expression as the first parameter, and any necessary
+placeholder parameters as the second. You can then use this as an
+argument to basically any method. In the above, we pass this as a
+column.
+
+Subselects are also simple: you grab a Select object off your Sql
+container, create the statement, and then pass it as an argument to the
+requisite method. In each of the above, we simply pass the Select to a
+method of the Where object.
+
+For the first:
+    $select    = $sql->select();
+    $select->from('albums')->columns(array('title'));
+
+    $subSelect = $sql->select();
+    $subSelect->from('notfoundlog')
+    $expr = new Expression('DISTINCT id');
+    $subSelect->columns(array($expr));
+
+    $where = new Where;
+    $where->in($subSelect);
+
+    $select->where($where);
+
+For the second:
+
+    $select = $sql->select();
+    $select->from('tableA')->columns(array('colA', 'colB'));
+
+    $subSelect = $sql->select();
+    $subSelect->from('tableB')->columns(array(new Expression('MAX(colC)')));
+
+    $where = new Where;
+    $where->equals('colA', $subSelect);
+    $select->where($where);
+
+Q: Just to clarify the scope of a local event manager: is it confined to the scope of a given module?
+A: [MWOP] No -- confined to the scope of the given object instance. You can break
+out of that scope by providing the EventManager instance with
+identifiers and a SharedEventManager instance (the latter happens by
+default if the EM instance was injected via the ServiceManager).
+
+Q: Does Zend\Db\Sql\Sql query the database to find out how to quote the columns?
+A: No -- it uses the Platform object from the composed Adapter instance.
+Each Platform object contains the rules for quoting -- which means no
+round trips to the database are necessary until you actually execute a
+query.
+
+Q: Can you still render to named segments?
+A: [MWOP] Named segments were a property of the response object in ZF1. To achieve
+similar functionality in ZF2, you would assign a name to a ViewModel's
+captureTo() method, which will capture that templates contents to that
+named variable of the parent ViewModel instance.
+
+Q: How do you set an alternate strategy?
+A: addRendererStrategy() and addReponseStrategy()
+   Also, vis a vis MVC, just return a different model (i.e. ViewModel, JsonModel, FeedModel, etc.)
+
+Q: How to set a view rendering strategy?
+A: 1 technique is to simply return different models
+   e.g. if you return ViewModel => phprenderer is used
+   but if you return JsonModel => jsonrenderer is used
+A: Otherwise ...
+Go to module config and add:
+view_manager => strategies => array('ViewJsonStrategy')
+
+Q: Do you have to use addRenderStrategy for json or can you just return a jsonmodel?
+A: [MWOP] You need to have the JsonStrategy registered; otherwise, even for a JsonModel, 
+   it will default to using the PhpRenderer.
+
+Q: addRendererStrategy() addResponseStrategy() -- from which object???
+A: [MWOP] Not sure I understand the question. If the question is: where do I
+register these? I'd do it from an event listener. That listener will
+need access to the View service.
+
+As an example, consider the following methods from a Module class. They
+register a listener on the route event, to trigger after routing. That
+event listener then checks to see if the controller routed to matches
+the current namespace. If so, it pulls the service manager from the
+application, and the View instance from there. It then registers
+listeners on the View instance.
+
+    public function onBootstrap($e)
+    {
+        $app = $e->getTarget();
+        $app->getEventManager()->attach('route', array($this, 'onRoutePost', -100);
+    }
+
+    public function onRoutePost($e)
+    {
+        $matches = $e->getRouteMatch();
+        $controller = $matches->getParam('controller');
+        $segments = explode('\\', $controller);
+        $namespace = array_shift($segments);
+        if ($namespace !== __NAMESPACE__) {
+            return;
+        }
+
+        $app = $e->getTarget();
+        $services = $app->getServiceManager();
+        $view     = $app->get('View');
+
+        $view->addRendereringStrategy(array($this, 'onRenderer'), 100);
+        $view->addResponseStrategy(array($this, 'onResponse'), 100);
+    }
+
+    public function onRenderer(\Zend\View\ViewEvent $e)
+    {
+        /* ... */
+    }
+
+    public function onResponse(\Zend\View\ViewEvent $e)
+    {
+        /* ... */
+    }
+
+Q: what's the diff between Zend\View\Strategy\PhpRendererStrategy vs. Zend\View\Renderer\PhpRenderer, Zend\View\Strategy\JsonStrategy vs. Zend\View\Renderer\JsonRenderer, etc.?
+A: The PhpRendererStrategy is simply a ListenerAggregate that _composes_
+the PhpRenderer. Its "renderer" listener method returns the PhpRenderer
+instance. Its "response" listener assigns the result of rendering to the
+response body.
+
+The JsonStrategy is similar; it composes the JsonRenderer. Its
+"renderer" listener returns the JsonRenderer only if the ViewModel in
+the event is a JsonModel. Its "response" listener sets the response
+"Content-Type" header to either "application/json", or, if the JsonModel
+reports that it is a JSONP callback, "application/javascript".
+
+So, the Renderer objects are implementations of RendererInterface. The
+Strategy objects are listeners on the View events, and are used to
+select which Renderer is used, as well as how to populate the Response
+object.
+
+Q: Can you override the rendering strategy (you want to allow for a client not setting the proper headers)?
+A: [MWOP] Yes. In fact, starting in 2.0.4 (next week), the Rendering strategies
+will only trigger if the ViewModel is of the appropriate type (JsonModel
+or FeedModel). Any Accept-header negotiation will occur in a new
+controller plugin, acceptedViewModel(), to which you provide the Accept
+header mime-types that will return specific ViewModel types. As such,
+you'll have much greater control.
+
+Yes. That said, we're moving away from that for 2.1. The reason is that
+enabling these strategies by default means that somebody can request
+_any_ route using the Accept header and get back either a JSON or
+Atom/RSS response -- which in most cases is likely undesirable, as there
+may be elements in the view that are not intended for rendering. It'd be
+an easy way to create a DoS attach on a site (as some of those view
+variables might lead to exceptions being raised in alternate renderers).
+
+As such, we're developing a controller plugin that can be used to
+selectively enable the appropriate renderer based on criteria you set --
+such as Accept header, a route parameter, etc.
+
+Q: How can you turn off layout/layout?
+A: I'm assuming they're asking how to disable layouts for a given request.
+
+That can be done by marking the view model from the action as "terminal"
+(indicating this will be the "root" at which we render):
+
+    $viewModel = new ViewModel();
+    $viewModel->setTerminal(true);
+
+Q: from Vitaliy to All Participants: how to set up a specific layout for a particular view?
+A: From a controller use the "layout()" controller plugin:
+   $layout = $this->layout();
+   $layout->setTemplate('alternate/layout');
+A: You can also do this in Module.php:
+class Module
+{
+    public function onBootstrap($e)
+    {
+        // Register a dispatch event
+        $app = $e->getParam('application');
+        $app->getEventManager()->attach('dispatch', array($this, 'setLayout'));
+    }
+
+    public function setLayout($e)
+    {
+        $matches    = $e->getRouteMatch();
+        $controller = $matches->getParam('controller');
+        if (false !== strpos($controller, __NAMESPACE__)) {
+            // not a controller from this module
+            return;
+        }
+
+        // Set the layout template
+        $viewModel = $e->getViewModel();
+        $viewModel->setTemplate('content/layout');
+    }
+}
+A: To turn off the layout: from a controller: explicitly create and return a view model from your controller, 
+   and mark it as “terminal”, which will hint to the MVC listener that normally injects the returned View Model 
+   into the layout View Model, to instead replace the layout view model:
+   $viewModel->setTerminal(TRUE);
+
+Q: Is the ViewModel used by the layout the same as the one returned by an MVC controller action?
+A: No.  The ViewModel used by the layout is called the "root" or "layout" ViewModel, and is 
+   automatically generated when the MVC layer is initialized.  You can access this from a Module.php file by 
+   attaching a listener to an MVC event (i.e. "dispatch") and then using the Service Manager to get the "View" service.
+   You can access this from a controller invoking the "layout()" plugin with no parameters.
+   See: http://framework.zend.com/manual/2.1/en/modules/zend.view.quick-start.html#dealing-with-layouts
+
+Q: from Julian to All Participants: re: Zend\Validator\Regex: I got this from ZendCon: On the regex "spec" is for printf to be able to reconstruct the route back from the view helper as the regex itself might not be easily "reversible".
+A: Thanks!
+
+Q: from Parl to All Participants: so eventmanager knows detects that its a strategy object and automatically listens on render?... does priority matter?
+A: Zend\Mvc\Application::bootstrap() attaches a number of listeners which includes Zend\Mvc\View\Http\ViewManager
+   and Zend\Mvc\SendResponseListener.  The ViewManager::onBootstrap handler attaches the Zend\Mvc\View\Http\InjectViewModelListener
+   to the MVC "render" event.  The ViewManager is also responsible for registering alternate rendering strategies.
+
+Q: from Francois to All Participants: but if you use $form->isValid($data) would it populate the form?
+A: The method signature for Zend\Form\Form::isValid() does not accept any parameters.
+
+Q: Why validate on the filter?  Why not always assign the filter to the form, and validate the form?
+A: There may be some cases where you want the form and filter separated -- i.e. if your form is generated using javascript.
+A: Also, if you look at Zend\Form\Form::isValid(), you will see that the return value for isValid() is actually from the assigned input filter.
+   Therefore, it is more efficient to run isValid() off the filter and not the form.
+
+Q: from Ryan to All Participants: RE: Zend\Form: Is there a method $form->setAction?
+A: No.  Action is now set with $form->setAttribute('action', 'xxx');
+
+Q: from Ryan to All Participants: is there a way to overwrite the view helpers, or do you ahve to write different ones?
+A: Yes.  You can define your own view helpers, using a custom namespace, but with the same "short" classname.
+   You can then identify these helpers in the module.config.php file.  Bear in mind, however, that many of the view
+   helpers have "set" methods which let you override behavior.  For example, the "basePath()" view helper has a method
+   "setBasePath()" which allows you to override the system-derived path.
+
+Q: Can you show me an example of using classmap autoloader?
+A: ZfcUser\Module::getAutoloaderConfig()
+
+Q: from Francois to All Participants: Which has priority if two keys are defined the same name in Module::getServiceConfig, module.config.php => service_manager, or autoload/local.php?
+A: The order in which settings are integrated are as follows: 
+   (1) Module.php
+   (2) module.config.php, 
+   (3) global/local override files
+   If there are duplicate keys, later settings will override earlier settings.
+   Test: zf2.unlikelysource.org/check
+
+Q: Should I use the "query" route type if I have a variable number of parameters to pass?
+A: No.  The "query" route is deprecated as of ZF 2.1.4; you could either use the "query" option of the HTTP router's 
+   assembling method instead in /Zend/Mvc/Router/Http/Query.php on line 51 or use the "wildcard" route.
+
+Q: from Brad to All Participants: can you also access those event(s) by the identifier at runtime (by event i mean listener)?
+A: No.  Identifiers are a way to create communication between an individual EventManager instance and the SharedEventManager. 
+   This allows you to connect a listener to an event without having direct access to the given EventManager instance or the 
+   object that composes it.
+
+Q: Given the module.config.php => 'view_manager' key, is there a corresponding Module::getViewManagerConfig() method?
+A: No.  Here is a list of Module::get* methods and the equivalent module.config.php key:
+   module.config.php	Module.php
+   -----------------	----------
+   service_manager	getServiceConfig()
+   view_helper		getViewHelperConfig()
+   controllers		getControllerConfig()
+   controller_plugins	getControllerPluginConfig()
+
+Q: from Brad to All Participants: does ZF2 have streaming response capability?
+A: Yes.  This ability was introduced in ZF2.1.  See: http://www.sasaprolic.com/2013/02/sending-stream-responses-with-zend.html
+
+Q: from Chet to All Participants: is there a routeconfig that can be used in module.php?
+A: There is no equivalent to "getConfig()" (which works with Zend\ModuleManager\Listener\ConfigListener).
+   But ... you can attach your own listener in the "onBootstrap()" method to the "route" event.
+
+Q: RE: Zend\Db: can you use hydrators?
+A: Yes.  For results, you can change the default ResultSet to HydratingResultSet
+   (see: http://framework.zend.com/manual/2.1/en/modules/zend.db.result-set.html#zend-db-resultset-hydratingresultset)
+
+Q: If I defined various "on" methods in the Module.php file, will they automatically kick in when the corresponding events are triggered?  For example, if I define "onDispatch" and "onRoute", will they kick in when the "dispatch" and "route" events are triggered?
+A: No.  However, there is the "init()" method which has a listener, Zend\ModuleManager\Listener\InitTrigger, which is accessed during the 
+   module loading stage.  There is also "onBootstrap()" which has a listener, Zend\ModuleManager\Listener\OnBootstrapListener,
+   which is activated when the MVC bootstrap event is triggered.  For more information have a look at the classes under
+   Zend\ModuleManager\Listener\*
+
+Q: RE: routing: could you do an an aternative route somehow, so the plugin would handle the constraint?
+A: Route plugins are a possibility, but a simpler approach might be to add a listener to the "dispatch.error" event which
+   could handle error processing for the module.
+
+Q: from Keiland to All Participants: can the font-color of those validation messages be changed?  for example, from black to red?
+A: Yes, however such styling should be done in the view script/template.
+   If you are using the view helper Zend\Form\View\Helper\FormElementErrors, 
+   there is a method setAttributes() which you can use to override the default styling.
+   Here is an example of setting the text color to red:
+   <!-- Demonstrates how to set error text color to red -->
+   <?php $helper = $this->getHelperPluginManager()->get('formElementErrors'); ?>
+   <?php $helper->setAttributes(array('style' => 'color:red;font-weight:bold;')); ?>
+   <!-- Echoes any errors from 'some_form_element' in bold red -->
+   <?php echo $helper($form->get('some_form_element'); ?>
+
+Q: from Sam to All Participants: RE: autoload_register.php, etc. they're listed as "fallbacks" ... how would that situation come up?
+   Why would you not specify a Module::getAutoloaderConfig() method?
+A: Still researching that.  I've noticed that deleting these files seems to have no impact whatsoever.
+
+Q: How do you echo the entire form at once?
+A: echo $this->formCollection($form);
+
+Q: from Adam to All Participants: RE: zend\db\sql\update::set($values, $flag) What is the $flag?
+A: $flag can have one of two values: zend\db\sql\update::VALUES_MERGE or zend\db\sql\update::VALUES_SET
+   VALUES_MERGE = $values are *added* (or merged) into whatever values are currently already set
+   VALUES_SET   = $values override whatever values are currently already set
+
+Q: from Ashley to All Participants:
+is there not a different between not empty and set required in zf2 because i seem to remember that there's a really subtle difference in zf1
+A: If you look at the source code for Zend\InputFilter\Input you will see a method "injectNotEmptyValidator()".
+   What this method does is if the "required" flag is set, adds a "notEmpty" validator using the "prependByName()" method.
+
+Q: Where do you specify "captureTo()"?
+A: On a ViewModel $viewModel.  Use $viewModel->captureTo() to retrieve the name of the variable which serves as a "capture" point
+   for a child view model.  Use $viewModel->setCaptureTo() to override the currently set variable name.
+
+Q: from Ashley to All Participants: is there anyway to work out the different between a true 404 and a constraint violation?
+A: Still researching this ... but when a constraint violation occurs, a "dispatch.error" event is triggered.
+   It is possible to attach a listener to this event which can perform further analysis.
+A: ???still researching this
+
+Q: from Jorge to All Participants:
+Doug Any reason why we shouldnt make the modules array database driven, I plan to make it that way for us, but I just want to make sure that there is nothing I should watch out for?
+A: You can substitute a Zend\Config object for any module configuration which is returned.
+   I.e. in the Module.php file getConfig() method, instead of the following:
+   return include 'config/module.config.php';
+   you could have this:
+   $config = new Zend\Config\Reader\Ini();
+   return $config->fromFile('some_ini_file.ini');
+   To make the system database driven might get tricky.  You run into a chicken-and-egg problem.
+   The configuration defines services.  Your database connection is one such service.
+   But ... if your configuration is in the database ... how do you extract it using services???
+   Possibly you could have your Module.config::getConfig() method include a PHP file which performs a simple database query
+   which returns and formats the values into an array which can then be returned.
+   No easy answers.
+
+Q:from Rudi to All Participants: why not just change the layout path?  each module has it's own module.config.php file, so you cannot have a unique key for each module?
+A: One approach would be to switch layouts in a listener attached in Module.php:
+from Marc to All Participants:	
+<?php
+namespace Layouts;
+class Module {
+    public function onBootstrap($e) {
+        $sm = $e->getApplication()->getEventManager()->getSharedManager();
+        $sm->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch', function($e) {
+            $controller      = $e->getTarget();
+            $controllerClass = get_class($controller);
+            $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
+            $config          = $e->getApplication()->getServiceManager()->get('config');
+            if(isset($config['module_layouts'][$moduleNamespace])) {
+                $controller->layout($config['module_layouts'][$moduleNamespace]);
+            }
+        }, 100);
+    }
+}
+A: Another possibility would be to add a "module" or "namespace" key to routing "defaults".
+   In your Module.php listener you could extract this param and use it to make the layout unique, something like this:
+    public function onDispatch(MvcEvent $e)
+    {
+        // alternate layout
+    	$module = $e->getRouteMatch()->getParam('module');
+		// NOTE: this only works if you code the module name into router "defaults" key
+		if (stripos($module, 'view-test') === 0) {
+			$layout = $e->getViewModel();
+			$layout->setTemplate('layout/view-test-layout');
+		}
+    }
+    
+
+Q:from Thomas to All Participants: forms can become quite long for e.g. registration forms had one php file for a single form with more than 300 lines of code?
+A: from Marc to All Participants: it can be broken down into collections
+
+Q: from Delong to All Participants: will we see custom filters later on in the course?
+A: See the latest posting on zf2.unlikelysource.org/forum/topic/zf2/2013-07-08
+
+Q: from Delong to All Participants: Does zend mail have some kind of a queue/scheduled delay functionality?
+A: from William to All Participants: job queue
+
+Q:from Jeff to All Participants: Do ZF2 events, listeners, etc. run on the same thread?
+A: At present yes.
+   This is more of a PHP issue and not a ZF2 issue, as ZF2 is written in PHP.
+   Note this warning, for example, from http://www.php.net/manual/en/install.unix.apache2.php:
+   "We do not recommend using a threaded MPM in production with Apache 2. ...
+   If you want to use a threaded MPM, look at a FastCGI configuration where PHP is running in its own memory space."
+   There is now a "pthreads" PECL extension considered stable as of 8 Sep 2013.
+   See: http://docs.php.net/manual/en/book.pthreads.php
+   ZF2 version 2.2 does not use this extension, however.
+
+Q: Zend\Config example?
+A: From: zf2.unlikelysource.org/config/autoload/zf2f.global.php
+$configFile = __DIR__ . '/../../module/Zf2f/config/labs_and_classes.ini';
+$configReader = new Zend\Config\Reader\Ini();
+$config = $configReader->fromFile($configFile);
+return ['service_manager' => $config];
+
+Q: Module specific listeners using a "module" param in the routing config?
+A: Add a param "module" => "name of module" under router => routes => xxx => options => defaults
+   In the onBootstrap() method:
+    public function onBootstrap(MvcEvent $e)
+    {
+        $eventManager        = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'modSpecific'), 100);
+    }
+    public function modSpecific(MvcEvent $e)
+    {
+    	$routeInfo = $e->getRouteMatch();
+    	if ($routeInfo->getParam('module') == 'name of module') {
+    		// do something
+    	}
+    }
+
+Q: How can you use module/XXX/public assets?
+A: There is a ZF2 module "AssetManager" which does this.
+   See: https://github.com/RWOverdijk/AssetManager
+
+Q: from Ryan to All Participants: How do you have public resources there, that arent under the accessible top level public folder?
+A: There is a ZF2 module "AssetManager" which does this.
+   See: https://github.com/RWOverdijk/AssetManager
+
+Q: How about XML? How could you do that?
+A: Still researching.  It is possible to have the controller pass data to the view, and then, in the view script,
+   generate the appropriate XML headers and use SimpleXML to generate XML output.
+A: Another possibility would be to directly append XML content to the response object and return it directly (after setting the appropriate headers).
+
+Q: from Karl to All Participants: how would you change the 404 route? ie, where is that set?
+A: Zend\Mvc\DispatchListener is one of the default listeners attached during the Mvc bootstrap phase.
+   (See Zend\Mvc\Application::bootstrap()).  DispatchListener attempts to instantiate the controller 
+   determined by the route match, and to dispatch the matching action.  
+   If unable to do so, an MvcEvent::EVENT_DISPATCH_ERROR event is triggered.
+   The MvcEvent will hold an error code, which would be one of the following:
+   Application::ERROR_CONTROLLER_NOT_FOUND
+   Application::ERROR_CONTROLLER_INVALID
+   Application::ERROR_ROUTER_NO_MATCH
+   The Zend\Mvc\View\Http\RouteNotFoundStrategy attaches two listeners to the dispatch error event:
+   --> "detectNotFoundError()" determines if one of the three error codes is recorded; if so, sets a 404 status code
+   --> "prepareNotFoundViewModel()" prepares and returns the "404" view model
+   The best way to change this behavior would be to attach a high-priority listener to the dispatch error event.
+   
+Q: from Jay to All Participants: Does ZF2 support MySQL with Propel?
+A: There is a module VureZF2 which integrates PropelORM functionality with ZF2.
+   See: http://modules.zendframework.com/miszyman/VureZF2
+
+Q: Examples of using Smarty with ZF2?
+A: There is a module SmartyModule which implements an alternate view renderer called "SmartyRenderer".
+   See: http://modules.zendframework.com/Domi-cc/SmartyModule
+
+Q: from Karl to All Participants: How do you overwrite error messages using the factory approach?
+A: Assuming you have something like this:
+    'validators' => array(
+        array(
+            'name'      => 'Regex',
+            'options' => array(
+                'pattern' => '/^[a-z0-9., -]{1,255}$/i',
+            ),
+        ),
+A: Add a key 'message' => 'whatever you want' to the array to overwrite
+
+Q: Can you give an example of a JOIN in Zend\Db\Sql?
+A: $select->join(
+     'foo' 			// table name,
+     'id = bar.id', 		// expression to join on (will be quoted by platform object before insertion),
+     array('bar', 'baz'), 	// (optional) list of columns, same requirements as columns()
+     $select::JOIN_OUTER 	// (optional), one of inner, outer, left, right also represented by constants in the API
+);
+
+Q: How can you do things like create or alter table using Zend\Db\Sql?
+A: Use classes under Zend\Db\Sql\Ddl.
+   See http://framework.zend.com/manual/2.2/en/modules/zend.db.sql.ddl.html
+
+Q: from Abdullah to All Participants: can we use getRouteConfig in class module?
+A: Yes, but it is not used to define routes: it's used to define router plugins.  
+   This method is defined in Zend\ModuleManager\Feature\RouteProviderInterface.
+   See http://framework.zend.com/manual/2.2/en/tutorials/config.advanced.html
+
+Q: Is there a list of Module.php methods vs. config/module.config.php keys?
+A: Yes: http://framework.zend.com/manual/2.2/en/modules/zend.module-manager.module-manager.html
+
+Q: Is there a list of pre-defined or default service manager keys?
+A: Yes.  See: http://framework.zend.com/manual/2.2/en/modules/zend.mvc.services.html#zend-mvc-services-service-manager-configuration
+
+Q: RE: Zend\InputFilter: Can you set wildcard filters?
+A: Still researching.
+
+Q: RE: form hydration -- class methods: from Francois Dupras to All Participants: would it go in __call if not found?
+A: Still researching
+
+Q: from Parl to All Participants: whats the design pattern behind only using a local event manager? Or how do you know when you should?
+A: Still researching
+
+Q: RE: reflection hydrator: from John D to All Participants: is there a naming convention for reflection?
+A: Still researching.
+
+

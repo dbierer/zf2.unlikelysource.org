@@ -2,23 +2,45 @@
 use Forum\Form\ForumFormFilter;
 use Forum\Form\ForumForm;
 return [
-	'controllers' => [
+    'navigation' => [
+        'default' => [
+    	   array('label' => 'Forum', 'route' => 'forum-home', 'order' => 1300),
+        ],
+    ],
+    'controllers' => [
 		'factories' => [
 			'forum-controller-index' => 'Forum\Factory\IndexControllerFactory',
 			'forum-controller-post' => 'Forum\Factory\PostControllerFactory',
 		],
 	],
 	'service_manager' => [
-		'invokables' => [
-			'forum-form' => 'Forum\Form\ForumForm', 
-		],
 		'factories' => [
 			'forum-table' => 'Forum\Factory\ForumTableFactory',
-			'forum-form-filter' => function ($e) { 
+			'forum-form' => function ($sm) {
+				$forumTable = $sm->get('forum-table');
+				$form = new ForumForm();
+				$form->setInputFilter($sm->get('forum-form-filter'));
+    			$form->prepareElements($forumTable->getDistinctTopics(),
+    								   $forumTable->getDistinctCategories(),
+									   $sm->get('forum-captcha-options'));
+				return $form;
+			},
+			'forum-form-filter' => function ($sm) {
 				$filter = new ForumFormFilter();
 				$filter->prepareFilters();
 				return $filter;
 			},
+		],
+		'services' => [
+		    'forum-captcha-options' => [
+		    	'expiration' => 300,
+		    	'font'		=> __DIR__ . '/../Fonts/FreeSansBold.ttf',
+		    	'fontSize'	=> 24,
+		    	'height'	=> 50,
+		    	'width'		=> 200,
+		    	'imgDir'	=> __DIR__ . '/../../public/captcha',
+		    	'imgUrl'	=> '/captcha',
+		    ],
 		],
 	],
 	'controller_plugins' => [

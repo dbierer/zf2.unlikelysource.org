@@ -41,8 +41,8 @@ class ForumFormFilter extends InputFilter
 		
 		$title = new Input('title');
 		$title->getValidatorChain()
-			 ->addByName('NotEmpty')
-			 ->addByName('StringLength', array('min' => 1, 'max' => 254, 'encoding' => 'utf-8'));
+			 ->attachByName('NotEmpty')
+			 ->attachByName('StringLength', array('min' => 1, 'max' => 254, 'encoding' => 'utf-8'));
 		$title->getFilterChain()
 			 ->attachByName('StripTags')
 			 ->attachByName('StringTrim');

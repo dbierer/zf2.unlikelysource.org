@@ -1,21 +1,27 @@
 <?php
 namespace CheckOrder;
-use Zend\EventManager\EventManager;
 
+use Zend\ModuleManager\ModuleManager;
+use Zend\ModuleManager\ModuleEvent;
+use Zend\Mvc\MvcEvent;
+use Zend\EventManager\EventManager;
 use CheckOrder\Entity\Storage;
+use ReflectionObject;
 
 class Module
 {
-	public function init($mm)
+	public function init(ModuleManager $mm)
 	{
         $eventManager = $mm->getEventManager();
 		Storage::$order[] = '======== CheckOrder\Module::init() ===========================';
-		Storage::$order[] = '....Event Manager Param: ' . get_class($mm);
-		Storage::$order[] = '....Event Manager Class: ' . get_class($eventManager);
+		Storage::$order[] = '....init() Param: ' . get_class($mm);
+		Storage::$order[] = '....Module Event Class: ' . get_class($mm->getEvent());
+		Storage::$order[] = '....Module Manager Class: ' . get_class($mm);
 		// This is OK
-        $eventManager->attach('loadModules.post', array($this, 'onLoadModulesPostFromInit'));
+		$eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, 
+							  array($this, 'onLoadModulesPostFromInit'));
 	    // NOTE: module manager $mm will only handle module events
-	    $eventManager->attach('dispatch', array($this, 'onDispatchFromInit'));
+	    $eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatchFromInit'));
 	    // attach custom event listener using shared event manager
 	    $sharedEventManager = $eventManager->getSharedManager();
 	    $sharedEventManager->attach('sharedInit', 'customEventInit', function ($e) { 
@@ -23,16 +29,18 @@ class Module
 			Storage::$order[] = '....Param: ' . get_class($e);
 		    });
 	}
-	public function onBootstrap($e)
+	public function onBootstrap(MvcEvent $e)
 	{
         $eventManager = $e->getApplication()->getEventManager();
 		Storage::$order[] = '======== CheckOrder\Module::onBootstrap() ===================';
-		Storage::$order[] = '....Event Manager Param: ' . get_class($e);
-		Storage::$order[] = '....Event Manager Class: ' . get_class($eventManager);
+		Storage::$order[] = '....onBootstrap() Param: ' . get_class($e);
+		Storage::$order[] = '....MVC Event Class: ' . get_class($e);
+		Storage::$order[] = '....MVC Manager Class: ' . get_class($e->getApplication());
 		// NOTE: MvcEvent $e will only handle MVC events
-	    $eventManager->attach('loadModules.post', array($this, 'onLoadModulesPostFromBootstrap'));
+		$eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, 
+							  array($this, 'onLoadModulesPostFromBootstrap'));
 	    // This is OK
-        $eventManager->attach('dispatch', array($this, 'onDispatchFromBootstrap'));
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatchFromBootstrap'));
 	    // attach custom event listener using shared event manager
         $sharedEventManager = $eventManager->getSharedManager();
 	    $sharedEventManager->attach('sharedOnBootstrap', 'customEventBootstrap', function ($e) {

@@ -22,17 +22,4 @@ class Module
         );
     }
     
-    // Does the same thing as the "controllers" key in module.config.php
-    /*
-    public function getControllerConfig()
-    {
-    	return array(
-			'factories' => array(
-				'forum-controller-index' => 'Forum\Factory\IndexControllerFactory',
-				'forum-controller-post' => 'Forum\Factory\PostControllerFactory',
-			),
-    	);
-    }
-    */
-    
 }

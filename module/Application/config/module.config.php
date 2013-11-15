@@ -8,6 +8,28 @@
  */
 
 return array(
+    'navigation' => array(
+        'default' => array(
+    	   array('label' => 'Home', 'route' => 'home', 'order' => 1),
+        ),
+    ),
+    'service_manager' => array(
+        'factories' => array(
+            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
+            'navigation-main-menu' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+            'navigation-left-col' => function ($sm) {
+                $factory = new Zend\Navigation\Service\ConstructedNavigationFactory($sm->get('navigation-config-left-col'));
+                return $factory->createService($sm);
+            },
+        ),
+        'services' => array(
+    	   'navigation-config-left-col' => array(
+    	       array('label' => 'home', 'route' => 'home','order' => 100),
+    	       array('label' => 'zf1', 'uri' => 'http://zf.unlikelysource.net','order' => 200),
+    	       array('label' => 'unlikelysource', 'uri' => 'http://unlikelysource.com/','order' => 300),
+    	   ),
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(
@@ -18,12 +40,6 @@ return array(
                         'controller' => 'Application\Controller\Index',
                         'action'     => 'index',
                     ),
-                ),
-            ),
-            'unlikelysource' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => 'http://www.unlikelysource.com/',
                 ),
             ),
         	// The following is a route to simplify getting started creating
@@ -51,11 +67,6 @@ return array(
                     ),
                 ),
             ),
-        ),
-    ),
-    'service_manager' => array(
-        'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
         ),
     ),
     'translator' => array(

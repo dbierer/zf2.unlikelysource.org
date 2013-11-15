@@ -15,8 +15,10 @@ return array(
         'RouteTest',
         'Forum',
         'TimeLog',
-        'ViewTest'
-        ),
+        'ViewTest',
+        'Zf2f',
+        'Cache',
+    ),
     'module_listener_options' => array(
         'module_paths' => array(
             './module',

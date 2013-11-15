@@ -10,8 +10,7 @@ class IndexControllerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $controllers)
     {
-        $allServices = $controllers->getServiceLocator();
-        $sm = $allServices->get('ServiceManager');
+        $sm = $controllers->getServiceLocator();
         $controller = new IndexController();
         $controller->forumTable 	 = $sm->get('forum-table');
         $controller->forumCatList	 = $controller->forumTable->getDistinctCategories();

@@ -1,7 +1,7 @@
 <?php
 namespace ViewTest\Helper;
 
-use Zend\Form\View\Helper\AbstractHelper;
+use Zend\View\Helper\AbstractHelper;
 use Zend\Form\Form;
 use Zend\Form\View\Helper;
 use Zend\Form\ElementInterface;
