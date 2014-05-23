@@ -5,5 +5,6 @@ echo $this->form()->openTag($form);
 echo $this->formcollection($form);
 echo $this->form()->closeTag();
 echo '<hr />' . PHP_EOL;
-echo $this->partial('q-and-a/partials/list.phtml', array('questions' => $this->questions));
+echo $this->partial('q-and-a/partials/list.phtml', 
+                    array('questions' => $this->questions, 'page' => $this->page));
 ?>

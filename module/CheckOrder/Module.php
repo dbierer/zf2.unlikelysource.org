@@ -41,6 +41,8 @@ class Module
 							  array($this, 'onLoadModulesPostFromBootstrap'));
 	    // This is OK
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatchFromBootstrap'));
+		// This is will not work: too late!!!
+        $eventManager->attach(MvcEvent::EVENT_BOOTSTRAP, array($this, 'onDispatchFromBootstrapWontWork'));
 	    // attach custom event listener using shared event manager
         $sharedEventManager = $eventManager->getSharedManager();
 	    $sharedEventManager->attach('sharedOnBootstrap', 'customEventBootstrap', function ($e) {
@@ -63,6 +65,11 @@ class Module
 		Storage::$order[] = '....Param: ' . get_class($e);
 		Storage::$order[] = '....Target: ' . get_class($e->getTarget());
 		$this->customEvent(__FUNCTION__);
+	}
+
+	public function onDispatchFromBootstrapWontWork($e)
+	{
+	    // doesn't matter won't work anyhow!!!
 	}
 	
 	public function onLoadModulesPostFromBootstrap($e)

@@ -1,0 +1,76 @@
+<?php $form->prepare(); ?>
+<?= $this->form()->openTag($form); ?>
+<table class="table-striped table-bordered table-condensed">
+<tr>
+    <th><?= $this->formLabel($form->get('category')); ?></th>
+    <td><?= $this->formSelect($form->get('category')); ?>
+        <?= $this->formElementErrors($form->get('category'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('title')); ?></th>
+    <td><?= $this->formText($form->get('title')); ?>
+        <?= $this->formElementErrors($form->get('title'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('date_expires')); ?></th>
+    <td><?= $this->formRadio($form->get('date_expires')); ?>
+        <?= $this->formElementErrors($form->get('date_expires'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('description')); ?></th>
+    <td><?= $this->formTextarea($form->get('description')); ?>
+        <?= $this->formElementErrors($form->get('description'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('photo_filename')); ?></th>
+    <td><?= $this->formUrl($form->get('photo_filename')); ?>
+        <?= $this->formElementErrors($form->get('photo_filename'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('contact_name')); ?></th>
+    <td><?= $this->formText($form->get('contact_name')); ?>
+        <?= $this->formElementErrors($form->get('contact_name'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('contact_email')); ?></th>
+    <td><?= $this->formEmail($form->get('contact_email')); ?>
+        <?= $this->formElementErrors($form->get('contact_email'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('contact_phone')); ?></th>
+    <td><?= $this->formText($form->get('contact_phone')); ?>
+        <?= $this->formElementErrors($form->get('contact_phone'))?>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('city')); ?></th>
+    <td><?= $this->formText($form->get('city')); ?>
+        <?= $this->formElementErrors($form->get('city'))?>
+        <datalist id="worldCities">
+        <?php foreach ($cityList as $key => $city) : ?>
+        <option value="<?= $key ?>"><?= $city ?></option>
+        <?php endforeach; ?>
+        </datalist>
+    </td>
+</tr>
+<tr>
+    <th><?= $this->formLabel($form->get('country')); ?></th>
+    <td><?= $this->formSelect($form->get('country')); ?>
+        <?= $this->formElementErrors($form->get('country'))?>
+    </td>
+</tr>
+<?php /* ?>
+<?php */ ?>
+</table>
+<?= $this->formSubmit($form->get('submit')); ?>
+<?= $this->form()->closeTag(); ?>
+<p>
+<?php Zend\Debug\Debug::dump($data); ?>
+</p>

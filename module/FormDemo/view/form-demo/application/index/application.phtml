@@ -1,0 +1,20 @@
+<?php if (count($this->messages)) : ?>
+<?php Zend\Debug\Debug::dump($this->messages); ?>
+<?php endif; ?>
+<h1>Form Demo Application</h1>
+Features:
+<ul>
+<li>Shows a list of countries</li>
+<li>When you click on a country, a list of cities pops up</li>
+<li>You can produce a PDF file with the list of cities</li>
+<li>Via a database lookup, a sum of online market prices is shown per country</li>
+<li>Two related SELECT fields are shown.  When you choose a country, using jQuery, the related SELECT field is populated</li>
+<li>Two controller actions are shown in the DropDowns module which deliver JSON</li>
+<li>When logged out, the standard twitter bootstrap layout is shown</li>
+<li>When you log in, an alternate layout is automatically chosen</li>
+<li>HTML5 elements are demostrated.  Might have to use Chrome to see all the effects.</li>
+<li>Uses the "onlinemarket" database (from the ZF2F and ZF2A courses)</li>
+<li>The "vendor" folder is empty.  Make sure you create it and run composer update.</li>
+</ul>
+Demo login: clark
+Demo password: password

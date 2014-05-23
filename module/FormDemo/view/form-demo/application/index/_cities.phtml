@@ -1,0 +1,17 @@
+<table class="table table-striped table-bordered table-condensed">
+<tr>
+    <th>City</th>
+    <th>State/Province</th>
+    <th>Area Code</th>
+    <th><a href="/form-demo/pdf/<?php echo $this->countryCode; ?>">PDF</a></th>
+</tr>
+<!-- NOTE: might want to paginate this -->
+<?php foreach ($cityList['cities'] as $row) : ?>
+    <tr>
+    <td><?= $row->city ?></td>
+    <td><?= $row->state_province ?></td>
+    <td><?= $row->area_code ?></td>
+    <td><a href="<?php echo $this->url('form-demo/drop-downs', array('action' => 'edit', 'id' => $row->id))?>">EDIT</a></td>
+    </tr>
+<?php endforeach; ?>
+</table>

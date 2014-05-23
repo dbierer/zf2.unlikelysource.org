@@ -58,7 +58,26 @@ if ($showLeftColumn && $showRightColumn) {
 //                ->prependStylesheet($this->basePath() . '/css/black.css')
                 ->prependStylesheet($this->basePath() . '/css/grey.css')
 ?>
+<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/ui-darkness/jquery-ui.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <!-- Scripts -->
+<script type="text/javascript">
+// counts when user enters page & when they exit
+// NOTE: make sure you enter a value for userId field
+function send_data(status)
+{
+   var id = $("#userId").val();
+	$.ajax(
+	{
+		url:'something.php',
+		type:'POST',
+		data:{"id":id},
+	});
+}
+window.onload=function(){ send_data("ON"); }
+window.onbeforeunload=function(){ send_data("OFF"); }
+</script>
 
 <!--[if IE 6]>
 <link rel="stylesheet" href="/css/ie6.css" type="text/css" />
@@ -114,6 +133,9 @@ input[type="text"] {
 }
 input[type="submit"] {
 	font-size: 11px;
+}
+body {
+    background-color: #D5F1F9;
 }
 </style>
 </head>
@@ -198,9 +220,9 @@ input[type="submit"] {
   	  <br />
       <?php
       	// left column menu
-      	if (isset($this->leftColumnMenu)) {
+//      	if (isset($this->leftColumnMenu)) {
             echo $this->navigation()->menu('navigation-left-col')->render();
-        }
+//        }
       ?>
       <h3>Source Code:</h3>
       Click here to access the source code for this website:
@@ -249,5 +271,6 @@ input[type="submit"] {
   &nbsp;|&nbsp;PHP Version: <?php echo phpversion(); ?>
   </div>
   </div>
+  <input type="hidden" name="userId" id="userId" value="0" />
 </body>
 </html>

@@ -15,9 +15,14 @@ class Module
 	{
 		$controller = $e->getRouteMatch()->getParam('controller');
 		$action = $e->getRouteMatch()->getParam('action');
+		// TODO: check to see if zfcuser is loaded
+		// TODO: check to see if simpleAuth is loaded
+		// maybe trigger check auth event???
 		if ($controller == 'zf2f-controller-index' && $action != 'guest') {
 			$authService = $e->getApplication()->getServiceManager()->get('zfcuser_auth_service');
 			if (!$authService->hasIdentity()) {
+				// NOTE: you could also rewrite the controller and action in the routematch to do a partial redirect
+				// perform a full redirect by returning the response object
 				$response = $e->getResponse();
 				$response->getHeaders()->addHeaderLine('Location: /zf2f/guest');
 				$response->setStatusCode(302);

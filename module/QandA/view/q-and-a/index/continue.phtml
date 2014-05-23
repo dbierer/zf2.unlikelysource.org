@@ -1,5 +1,6 @@
 <h1>Search</h1>
 <hr />
 <?php
-echo $this->partial('q-and-a/partials/list.phtml', array('questions' => $this->questions));
+echo $this->partial('q-and-a/partials/list.phtml', 
+                    array('questions' => $this->questions, 'page' => $this->page));
 ?>

@@ -1,8 +1,20 @@
 {
-    "require": {
-        "php": ">=5.3.3",
-        "zendframework/zendframework": ">=2.2.0",
-        "zf-commons/zfc-base": "dev-master",
-        "zf-commons/zfc-user": "dev-master",
-    }
+	"name" : "zendframework/skeleton-application",
+	"description" : "Demo Application for ZF2",
+	"keywords" : [
+		"framework",
+		"zf2"
+	],
+	"homepage" : "http://zf2.unlikelysource.org/",
+	"license" : [
+		"BSD-3-Clause"
+	],
+	"require" : {
+		"php" : ">=5.3.3",
+		"doctrine/common" : ">=2.1",
+		"zf-commons/zfc-user" : "dev-master",
+		"zendframework/zendframework" : ">2.2.0",
+		"zendframework/zend-developer-tools" : "dev-master",
+		"zendframework/zendpdf" : "*"
+	}
 }

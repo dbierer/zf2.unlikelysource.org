@@ -1,0 +1,11 @@
+<style>
+label {
+	width: 200px;
+}
+</style>
+Primary Key: <?php echo $this->id; ?>
+<?php
+$this->form->prepare();
+echo $this->form()->openTag($this->form);
+echo $this->formCollection($this->form);
+echo $this->form()->closeTag();

@@ -1,0 +1,13 @@
+<style>
+label {
+	width: 400px;
+}
+</style>
+<div style="width: 400px;">
+<?php $this->form->prepare(); ?>
+<?php $this->form->setAttribute('action', $this->url('simple-auth-login')); ?>
+<?php $this->form->setAttribute('method', 'post'); ?>
+<?php echo $this->form()->openTag($this->form); ?>
+<?php echo $this->formCollection($this->form); ?>
+<?php echo $this->form()->closeTag(); ?>
+</div>

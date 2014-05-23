@@ -1,0 +1,92 @@
+<!-- NOTE: probably should download this and make it local off /public -->
+<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/ui-darkness/jquery-ui.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+	
+<style>
+label {
+	width: 200px;
+}
+.fixed-height {
+	max-height: 200px;
+	overflow: auto;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$( "#citySelect" ).autocomplete({
+		"source":"\/form-demo/drop-downs/city-lookup",
+	}).autocomplete("widget").addClass("fixed-height");
+	$("#countrySelect").change(function() {
+		processCities($(this).val());
+	});
+	$("#range").change(function() {
+		displayNumber($(this).val());
+	});
+});
+/*
+ * Find city and state given zip
+ */
+function processCities(country_code) {
+	var url = '/form-demo/drop-downs/city-from-country';
+	var get_data = {"country" : country_code};
+	
+	$.get(url, get_data, 
+		function(data) {
+    		if(data) {
+		    $("#cityName")
+                .find('option')
+                .remove()
+                .end();
+    		$.each(data, function (i, value) {
+    			    var o = '<option onClick="jumpToEdit(' + value.id + ')" value="' + value.id + '">' + value.city + '</option>';
+    			    console.log(o);
+    			    $("#cityName").append(o);
+       			    }
+       		    );
+       		}
+       	}, 
+	'json');
+	
+}
+function displayNumber(number) {
+    $("#rangeText").val(number);
+    console.log(number);
+}
+function jumpToEdit(id) {
+	var loc = "/dropdowns/edit/" + id;
+	window.location.replace(loc);
+}
+</script>
+Message: <?php echo $this->message; ?>
+<div style="float: left; width: 800px;">
+<?php 
+$this->form->prepare(); 
+echo $this->form()->openTag($this->form);
+echo $this->formRow($this->form->get('countrySelect'));
+echo '<br />';
+echo $this->formRow($this->form->get('cityName'));
+echo '<br />';
+echo $this->formRow($this->form->get('required'));
+echo '<br />';
+/*
+echo $this->formRow($this->form->get('phone'));
+echo '<br />';
+*/
+?>
+<table>
+<tr><td><?php echo $this->formLabel($this->form->get('range')); ?></td>
+<td>0&nbsp;</td>
+<td><?php echo $this->formRange($this->form->get('range')); ?></td>
+<td>&nbsp;100&nbsp;</td>
+<td><?php echo $this->formText($this->form->get('rangeText')); ?>
+<?php echo $this->formElementErrors($this->form->get('range')); ?></td>
+</tr>
+</table>
+<br />
+<?php echo $this->formRow($this->form->get('citySelect'));
+echo '<br />';
+echo $this->formSubmit($this->form->get('submit'));
+?>
+<?php Zend\Debug\Debug::dump($this->data); ?>
+</div>

@@ -1,0 +1,32 @@
+<script language="javascript">
+function show(id) {
+	var e1 = document.getElementById(id);
+	if(e1.style.display == 'block') {
+	    e1.style.display = 'none';
+	} else {
+	    e1.style.display = 'block';
+	}
+}
+</script>
+<?php if (isset($this->list) && count($this->list)) : ?>
+<?php //Zend\Debug\Debug::dump($this->list); exit; ?>
+<?php $maxCols = 3; ?>
+<table style="width: 800px;">
+<?php $col = 0; ?>
+<?php foreach ($this->list as $key => $cityList) : ?>
+    <?php if ($col == 0) : ?><tr><?php endif; ?>
+    <td style="width:400px;"><a name="<?= $key ?>" onClick="show('<?= $key ?>')"><?= $key ?></a>
+        &nbsp;&nbsp;$<?php echo number_format($cityList['sum'],2); ?>
+        <div id="<?= $key; ?>" class="all" style="display: none;">
+            <?php echo $this->partial('form-demo/application/index/_cities', 
+                                      array('cityList' => $cityList,
+                                            'countryCode' => $key)); ?>
+        </div>
+    </td>
+    <?php $col++; ?>
+    <?php if ($col == $maxCols) : ?></tr><?php $col = 0; ?><?php endif; ?>
+<?php endforeach; ?>
+</table>
+<?php else : ?>
+No Listings!
+<?php endif; ?>

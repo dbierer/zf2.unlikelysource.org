@@ -31,8 +31,10 @@ class Module
 	    $sm = $e->getApplication()->getServiceManager();
 		// get view model
 	 	$vm = $e->getViewModel();
+	 	// get ACL
+	 	// $acl = '';
 	 	// store search info in a variable
-	 	$vm->setVariable('leftColumnMenu', $sm->get('navigation-left-col'));
+	 	// $vm->setVariable('acl', $sm->get('navigation-left-col'));
 	}
 
     // NOTE: not used right now

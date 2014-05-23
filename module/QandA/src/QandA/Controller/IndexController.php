@@ -19,7 +19,8 @@ class IndexController extends AbstractActionController
 {
     public $data;    // instance of QandA\Model\Data
     protected $itemsPerPage = 15;
-
+    protected $pagesWithinRange = 4;
+    
     public function indexAction()
     {
         $form = $this->getServiceLocator()->get('q-and-a-search-form');
@@ -30,6 +31,7 @@ class IndexController extends AbstractActionController
                 $paginator = new Paginator(new ArrayAdapter($this->data->search($data['search'])));
                 $paginator->setCurrentPageNumber(1);
                 $paginator->setItemCountPerPage($this->itemsPerPage);
+                $paginator->setPageRange($this->pagesWithinRange);
                 $this->data->setSession($paginator);
                 $this->redirect()->toUrl('/q-and-a/continue/1');
             }
@@ -38,15 +40,16 @@ class IndexController extends AbstractActionController
         $paginator = new Paginator(new ArrayAdapter($this->data->getQuestions()));
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage($this->itemsPerPage);
-        $viewModel = new ViewModel(array('questions' => $paginator, 'searchForm' => $form));
+        $viewModel = new ViewModel(array('questions' => $paginator, 'searchForm' => $form, 'page' => 0));
         $viewModel->setTemplate('q-and-a/index/index.phtml');
         return $viewModel;
     }
 
     public function answerAction()
     {
+        $page = (int) $this->params()->fromRoute('page');
         $question = $this->params('question');
-        $viewModel = new ViewModel(array('answers' => $this->data->getAnswers($question)));
+        $viewModel = new ViewModel(array('answers' => $this->data->getAnswers($question), 'page' => $page));
         $viewModel->setTemplate('q-and-a/index/answer.phtml');
         return $viewModel;
     }
@@ -60,7 +63,7 @@ class IndexController extends AbstractActionController
         $page = (int) $this->params()->fromRoute('page');
         $paginator->setCurrentPageNumber($page);
         $paginator->setItemCountPerPage($this->itemsPerPage);
-        $viewModel = new ViewModel(array('questions' => $paginator));
+        $viewModel = new ViewModel(array('questions' => $paginator, 'page' => $page));
         $viewModel->setTemplate('q-and-a/index/continue.phtml');
         return $viewModel;
     }

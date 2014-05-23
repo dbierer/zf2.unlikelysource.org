@@ -32,37 +32,46 @@ class IndexController extends AbstractActionController
 		$viewModel->setTemplate('routetest/index/index.phtml');
 		return $viewModel;
 	}
-	// NOTE: the "query" route type has been deprecated as of 2.1.4!
-	/*
-	public function queryAction()
-	{
-    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
-		$layout = $this->layout();
-		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
-		$params = array_merge($this->params()->fromQuery(), $this->params()->fromRoute());
-		$viewModel = new ViewModel(array('name' => 'QUERY', 'params' => $params));
-		$viewModel->setTemplate('routetest/index/show-params.phtml');
-		return $viewModel;
-	}
-	*/
 	public function wildcardAction()
 	{
-    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
-		$layout = $this->layout();
-		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
 		$params = array_merge($this->params()->fromQuery(), $this->params()->fromRoute());
 		$viewModel = new ViewModel(array('name' => 'WILDCARD', 'params' => $params));
 		$viewModel->setTemplate('routetest/index/show-params.phtml');
 		return $viewModel;
 	}
-	public function methodPostAction()
+	public function postMethodAction()
 	{
-    	$leftColumnStuff = array('<h4><a href="' . $this->url()->fromRoute('routetest-home') . '">&lt;&lt;BACK</a></h4>');
-		$layout = $this->layout();
-		$layout->setVariable('leftColumnStuff', $leftColumnStuff);
-		$params = array_merge($this->params()->fromPost());
+		$params = $this->params()->fromPost();
 		$viewModel = new ViewModel(array('name' => 'METHOD - POST', 'params' => $params));
 		$viewModel->setTemplate('routetest/index/show-params.phtml');
 		return $viewModel;
+	}
+	public function getMethodAction()
+	{
+		$params = $this->params()->fromQuery();
+		$viewModel = new ViewModel(array('name' => 'METHOD - GET', 'params' => $params));
+		$viewModel->setTemplate('routetest/index/show-params.phtml');
+		return $viewModel;
+	}
+	public function moduleXAction()
+	{
+	    $params = $this->params()->fromRoute();
+	    $viewModel = new ViewModel(array('name' => 'MODULE.PHP - X', 'params' => $params));
+	    $viewModel->setTemplate('routetest/index/show-params.phtml');
+	    return $viewModel;	     
+	}
+	public function moduleYAction()
+	{
+	    $params = $this->params()->fromRoute();
+	    $viewModel = new ViewModel(array('name' => 'MODULE.PHP - Y', 'params' => $params));
+	    $viewModel->setTemplate('routetest/index/show-params.phtml');
+	    return $viewModel;	     
+	}
+	public function moduleZAction()
+	{
+	    $params = $this->params()->fromRoute();
+	    $viewModel = new ViewModel(array('name' => 'MODULE.PHP - Z', 'params' => $params));
+	    $viewModel->setTemplate('routetest/index/show-params.phtml');
+	    return $viewModel;	     
 	}
 }

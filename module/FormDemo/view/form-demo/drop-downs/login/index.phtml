@@ -1,0 +1,30 @@
+<div class="imgLogin">&nbsp;</div>
+<div class="formLogin">
+<h3>Please Enter Login Details</h3>
+<?php
+$form = $this->loginForm;
+$form->prepare();
+$form->setAttribute('method', 'POST');
+$username 	= $form->get('username');
+$password 	= $form->get('password');
+$submit 	= $form->get('submit');
+echo $this->form()->openTag($form);
+?>
+<?php echo (isset($this->message)) ? '<b>' . $this->message . '</b><br />' : ''; ?>
+<table>
+<tr>
+	<td><?php echo $this->formLabel($username); ?>
+	    <?php echo $this->formText($username); ?>
+	    <?php echo $this->formElementErrors($username); ?>
+	</td>
+</tr>
+<tr>
+	<td><?php echo $this->formLabel($password); ?>
+	    <?php echo $this->formPassword($password); ?>
+	    <?php echo $this->formElementErrors($password); ?>
+	</td>
+</tr>
+<tr><td><?php echo $this->formSubmit($submit);?></td></tr>
+</table>
+<?php echo $this->form()->closeTag($form); ?>
+</div>

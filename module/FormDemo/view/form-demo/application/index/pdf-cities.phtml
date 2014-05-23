@@ -1,0 +1,21 @@
+<?php 
+$max = 28;
+$count = 0;
+$page = 1;
+echo '===============================================================' . PHP_EOL;
+echo 'Country Code: ' . $this->countryCode . PHP_EOL;
+$format = '%30s | %16s | %9s ' . PHP_EOL;
+echo '---------------------------------------------------------------' . PHP_EOL;
+printf($format, 'City', 'State/Province', 'Area Code');
+echo '---------------------------------------------------------------' . PHP_EOL;
+foreach ($this->cityList as $row) {
+    printf($format, $row->city, $row->state_province, $row->area_code);
+    if ($count++ > $max) {
+        echo 'Page ' . $page++ . PHP_EOL;
+        echo '===============================================================' . PHP_EOL;
+        printf($format, 'City', 'State/Province', 'Area Code');
+        echo '---------------------------------------------------------------' . PHP_EOL;
+        $count = 0;
+    }
+}
+echo 'Page ' . $page++ . PHP_EOL;

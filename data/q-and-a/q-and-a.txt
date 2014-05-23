@@ -38,7 +38,7 @@ http://blogs.sakienvirotech.com/index.php/random/2011/08/25/using-zend-framework
 Q: Examples of using a hydrator with a class
 A: ZfcBase\Mapper\AbstractDbMapper
 
-Q: How do you do a redirect from Module.php
+Q: How do you do a redirect from Module.php?
 A: 
 $response = new \Zend\Http\PhpEnvironment\Response();        
 $response->getHeaders()->addHeaderLine('Location', $url);        
@@ -327,14 +327,6 @@ while they do not share state, grouping them in a single class is
 logical, and makes attaching the listeners much more convenient; for
 good exmples look at Zend\Form\Annotation\FormAnnotationsListener and
 ElementAnnotationsListener.
-
-Q: How do you do a redirect from Module.php?
-A: [MWOP] Depends on what you're trying to accomplish. If you register a listener
-to any of the "route" or "dispatch" events, or to a "dispatch" event on
-the "Zend\Stdlib\DispatchableInterface" shared context, you can initiate
-a redirect by returning a response that has a 301 or 302 header with a
-Location header value set. As such, you'd do the above in a listener
-callback.
 
 Q: How do you register a custom view helper?
 A: $instanceOfHelper = new My_New_Helper();
@@ -951,9 +943,17 @@ A: Yes, but it is not used to define routes: it's used to define router plugins.
 
 Q: Is there a list of Module.php methods vs. config/module.config.php keys?
 A: Yes: http://framework.zend.com/manual/2.2/en/modules/zend.module-manager.module-manager.html
+   Also: see http://framework.zend.com/manual/2.2/en/tutorials/config.advanced.html
+   These include 'controllers' = getControllerConfig(), 'route_manager' = getRouteConfig(), 
+   'service_manager' = getServiceConfig(), 'view_helpers' = getViewHelperConfig(), etc.
 
 Q: Is there a list of pre-defined or default service manager keys?
 A: Yes.  See: http://framework.zend.com/manual/2.2/en/modules/zend.mvc.services.html#zend-mvc-services-service-manager-configuration
+
+Q: RE: Zend\InputFilter\Input are inputs required by default?
+A: Yes.  
+   To make them not required: $input->setRequired(FALSE);
+   To make it so that if empty they are not validated: $input->setAllow Empty(TRUE);
 
 Q: RE: Zend\InputFilter: Can you set wildcard filters?
 A: Still researching.
@@ -966,5 +966,3 @@ A: Still researching
 
 Q: RE: reflection hydrator: from John D to All Participants: is there a naming convention for reflection?
 A: Still researching.
-
-

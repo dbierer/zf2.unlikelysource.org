@@ -2,5 +2,7 @@
 .composer
 composer
 zendframework/
+zf-commons
+doctrine
 autoload.php
-ZF2/
+bin

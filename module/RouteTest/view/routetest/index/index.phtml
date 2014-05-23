@@ -7,18 +7,37 @@
 <li><a href="<?php echo $this->url('routetest-query/query', array('a' => 'A')); ?>">routetest-query/query</a></li>
 <li><a href="<?php echo $this->url('routetest-query/query', array('a'=> 'A', 'b' => 'B', 'c' => 'C')); ?>">routetest-query/query, array('a'=> 'A', 'b' => 'B', 'c' => 'C')</a></li>
 <?php */ ?>
-<li><a href="<?php echo $this->url('routetest-wildcard/wildcard-key', array('a'=> '123', 'b' => '456', 'c' => '789')); ?>">routetest-wildcard, array('a'=> 'A', 'b' => 'B', 'c' => 'C')</a></li>
-<li><a href="/routetest-module-test">routetest-module-test (defined in Module.php)</a></li>
+<li><a href="<?php echo $this->url('routetest-wildcard/wildcard-key', array('a'=> '123', 'b' => '456', 'c' => '789')); ?>">routetest-wildcard, array('a'=> '123', 'b' => '456', 'c' => '789')</a></li>
 </ul>
 <hr />
+
 <h3>Tests the "Method" Route Type</h3>
-<form method="POST">
-<input type="text" name="name" value="NAME TEST" />
-<input type="submit" />
+<form method="POST" action="/route-test/method">
+<input type="text" name="name" value="POST TEST" />
+<input type="submit" value="POST" />
+</form>
+<form method="GET" action="/route-test/method">
+<input type="text" name="name" value="GET TEST" />
+<input type="submit" value="GET" />
 </form>
 <hr />
+
+<h3>Module Route Rewriting</h3>
+Shows you you can perform redirection in a Module.php listener.
+<br />
+<a href="/route-test/module">Random X, Y, Z</a></li>
+<hr />
+
+<h3>Console Route Test: ConsoleTestController</h3>
+<pre>
+php /path/to/public/index.php console 12345 TEST1 TEST2
+</pre>
+
+
 <h3>Module.php "on" Methods</h3>
 <?php Zend\Debug\Debug::dump(RouteTest\Entity\Storage::$value); ?>
+
+
 </div>
 <div style="width: 200px; float right; display: inline-block; margin: 10px;">
 <img src="/images/jacobite_steam_train_ft_william_aug_2013.jpg" width=300px />

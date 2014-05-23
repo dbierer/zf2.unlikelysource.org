@@ -1,0 +1,32 @@
+<?php
+// configure desired options
+// move to the /config/autoload folder for your application
+// rename to "simple-auth.local.php"
+// to see if the user is logged in,
+// in your controller, use the "loggedIn()" controller plugin
+// in a view template use the "loggedIn()" view helper 
+// create a folder /public/captcha
+// make sure the ZF2 app has rights to write to /public/captcha 
+return array(
+	'simple-auth' => array(
+		'credentials' => array(
+	    	'who' => 'username',
+			'what' => 'password',
+	   	),
+		'redirect' => 'mongo-db-home',
+	),
+	'service_manager' => array(
+		'services' => array(
+			'simple-auth-captcha-options' => array(
+		    	'expiration' => 300,
+		    	'font'		=> __DIR__ . '/../../module/SimpleAuth/fonts/FreeSansBold.ttf',
+		    	'fontSize'	=> 24,
+		    	'height'	=> 50,
+		    	'width'		=> 200,
+		    	'imgDir'	=> __DIR__ . '/../../public/captcha',
+		    	'imgUrl'	=> '/captcha',  
+				'wordLen'	=> 4,			// #characters  	
+			),
+		),
+	),
+);

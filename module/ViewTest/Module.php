@@ -28,7 +28,8 @@ class Module
         $app->getEventManager()->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'), -100);
         Storage::$order[] = 'onBootstrap() $e->getTarget(): ' . get_class($app);
     }
-    
+
+    // example of module specific code
     public function onDispatch(MvcEvent $e)
     {
         // alternate layout

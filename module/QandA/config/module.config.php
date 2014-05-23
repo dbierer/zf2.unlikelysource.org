@@ -40,7 +40,7 @@ return array(
                 'type'    => 'Segment',
                 'options' => array(
                     // Change this to something specific to your module
-                    'route'    => '/q-and-a/ans[/:question]',
+                    'route'    => '/q-and-a/ans[/:question][/:page]',
                     'defaults' => array(
                         'module'        => 'QandA',
                         'controller'    => 'q-and-a-controller-index',

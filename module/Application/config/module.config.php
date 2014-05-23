@@ -23,10 +23,13 @@ return array(
             },
         ),
         'services' => array(
+           'application-test' => array(1,2,3),
     	   'navigation-config-left-col' => array(
-    	       array('label' => 'home', 'route' => 'home','order' => 100),
+    	       array('label' => 'login', 'route' => 'zfcuser','order' => 100),
     	       array('label' => 'zf1', 'uri' => 'http://zf.unlikelysource.net','order' => 200),
-    	       array('label' => 'unlikelysource', 'uri' => 'http://unlikelysource.com/','order' => 300),
+    	       array('label' => 'joomla', 'uri' => 'http://joomla.unlikelysource.org/','order' => 300),
+    	       array('label' => 'unlikelysource', 'uri' => 'http://unlikelysource.com/','order' => 400),
+    	       array('label' => 'zend', 'uri' => 'http://packages.zendframework.com/','order' => 500),
     	   ),
         ),
     ),
@@ -37,7 +40,7 @@ return array(
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'application-controller-index',
                         'action'     => 'index',
                     ),
                 ),
@@ -81,7 +84,7 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'application-controller-index' => 'Application\Controller\IndexController',
             'application-controller-login' => 'Application\Controller\LoginController'
         ),
     ),

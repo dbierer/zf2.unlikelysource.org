@@ -5,9 +5,10 @@
  *
  * @see https://github.com/zendframework/ZFTool
  */
-return array(
+$config = array(
     'modules' => array(
         'Application',
+        //'SimpleAuth',
         'ZfcBase',
         'ZfcUser',
         'CheckOrder',
@@ -18,6 +19,8 @@ return array(
         'ViewTest',
         'Zf2f',
         'Cache',
+        //'ServiceManagerDemo',
+        'FormDemo',
     ),
     'module_listener_options' => array(
         'module_paths' => array(
@@ -26,4 +29,9 @@ return array(
             ),
         'config_glob_paths' => array('config/autoload/{,*.}{global,local}.php')
         )
-    );
+);
+if (APP_ENV == 'local') {
+    $config['modules'][] = 'ZendDeveloperTools';
+    $config['modules'][] = 'PhpUnit'; // just to demo testing
+}
+return $config;

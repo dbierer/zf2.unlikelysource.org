@@ -2,7 +2,7 @@
 return [
     'navigation' => [
         'default' => [
-    	   array('label' => 'ZF2F', 'route' => 'zf2f-home', 'order' => 1600),
+    	   array('label' => 'ZF2F', 'route' => 'zf2f-home', 'order' => 1700),
         ],
     ],
     'controllers' => [

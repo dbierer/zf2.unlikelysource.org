@@ -8,8 +8,25 @@ return [
     'controllers' => [
 		'invokables' => [
 			'routetest-controller-index' => 'RouteTest\Controller\IndexController',
-		],
+			'routetest-controller-console-test' => 'RouteTest\Controller\ConsoleTestController',
+        ],
 	],
+	'console' => [
+        'router' => [
+            'routes' => [
+                'route-test-console' => [
+                	'type' => 'Simple',
+                    'options' => [
+                        'route'    => 'console <id> <test1> <test2>',
+                        'defaults' => [
+                            'controller' => 'routetest-controller-console-test',
+                            'action'     => 'index',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],	
 	'router' => [
 		'routes' => [
 			'routetest-home' => [
@@ -22,27 +39,49 @@ return [
 					],
 				],
 			],
-			// NOTE: this block is also a "Part" route
-			'routetest-method-post' => [
-				'type' => 'Zend\Mvc\Router\Http\Literal',
+			'routetest-module-redirect' => [
+				'type' => 'Zend\Mvc\Router\Http\Segment',
 				'options' => [
-					'route'    => '/routetest-post',
+					'route'    => '/route-test/module[/]',
 					'defaults' => [
 						'controller' => 'routetest-controller-index',
-						'action'     => 'method-post',
+						// NOTE: there is no action called "module"
+						'action'     => 'module',
 					],
 				],
-				'may_terminate' => true,
+			],
+			// NOTE: this block is also a "Part" route
+			'routetest-method-test' => [
+				'type' => 'Zend\Mvc\Router\Http\Literal',
+				'options' => [
+					'route'    => '/route-test/method',
+					'defaults' => [
+						'controller' => 'routetest-controller-index',
+						'action'     => 'index',
+					],
+				],
+				// NOTE: you *must* set this to FALSE, otherwise method will not be evaluated
+				'may_terminate' => FALSE,
 				'child_routes'  => [
-					'type' => 'Zend\Mvc\Router\Http\Method',
-					'options' => [
-						'verb'    => 'post',
-						'defaults' => [
-							'controller' => 'routetest-controller-index',
-							'action'     => 'method-post',
-						],
-					],
-				],
+				    'routetest-method-post-child-1' => [
+    					'type' => 'Zend\Mvc\Router\Http\Method',
+    					'options' => [
+    						'verb'    => 'get',
+    						'defaults' => [
+    							'action'     => 'get-method',
+    						],
+    					],
+    				],
+				    'routetest-method-post-child-2' => [
+    					'type' => 'Zend\Mvc\Router\Http\Method',
+    					'options' => [
+    						'verb'    => 'post',
+    						'defaults' => [
+    							'action'     => 'post-method',
+    						],
+    					],
+    				],
+],
 			],
 			'routetest-wildcard' => [
 				'type' => 'Zend\Mvc\Router\Http\Literal',
