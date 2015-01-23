@@ -57,4 +57,8 @@ class Module implements AutoloaderProviderInterface
 	 	    $view->setTemplate('layout/form-demo');
 	 	}
 	}
+	
+	public function getServiceConfig()
+	{
+	}
 }

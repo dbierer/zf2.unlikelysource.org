@@ -2,7 +2,7 @@
 return array(
     'navigation' => array(
         'default' => array(
-    	   array('label' => 'CheckOrder', 'route' => 'check-order', 'order' => 1200),
+    	   array('label' => 'Order', 'route' => 'check-order', 'order' => 1200),
         ),
     ),
     'service_manager' => array(

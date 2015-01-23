@@ -1,14 +1,9 @@
 <?php
 // see http://framework.zend.com/manual/2.2/en/modules/zend.service-manager.delegator-factories.html
 return array(
-    /*
-    'service_manager' => array(
-    
-    ),
-    */
     'navigation' => array(
         'default' => array(
-    	   array('label' => 'SvcMgr', 'route' => 'service-manager-demo', 'order' => 1600),
+    	   array('label' => 'SvcMgr', 'route' => 'service-manager-demo', 'order' => 1900),
         ),
     ),
     'controllers' => array(

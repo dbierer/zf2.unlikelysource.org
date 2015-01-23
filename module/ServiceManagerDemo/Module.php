@@ -9,6 +9,7 @@
 
 namespace ServiceManagerDemo;
 
+use ServiceManagerDemo\Model\DemoModel;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -17,17 +18,7 @@ class Module implements AutoloaderProviderInterface
 {
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-		    // if we're in a namespace deeper than one level we need to fix the \ in the path
-                    __NAMESPACE__ => __DIR__ . '/src/' . str_replace('\\', '/' , __NAMESPACE__),
-                ),
-            ),
-        );
+        return array('Zend\Loader\ClassMapAutoloader' => array(__DIR__ . '/autoload_classmap.php'));
     }
 
     public function getConfig()
@@ -42,5 +33,31 @@ class Module implements AutoloaderProviderInterface
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'invokables' => array(
+                'service-manager-demo-delegator-factory' => 'ServiceManagerDemo\Factory\DelegatorDemoFactory',
+            ),
+            'factories' => array(
+                'service-manager-demo-model' => 'ServiceManagerDemo\Factory\DemoModelFactory',
+            ),
+            'initializers' => array(
+                'service-manager-demo-example-initializer' =>
+                    function ($instance, $sm) {
+                        $demoModel = $sm->get('service-manager-demo-model');
+                        if (is_object($instance)) {
+                            $demoModel->setOutput('Initializer Called for: ' . get_class($instance));
+                        } else {
+                            echo 'Initializer Called for: non-object data type';
+                        }
+                    },
+            ),
+            'delegators' => array(
+                'service-manager-demo-model' => array('service-manager-demo-delegator-factory'),
+            ),
+        );
     }
 }

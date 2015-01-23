@@ -10,6 +10,7 @@ use ReflectionObject;
 
 class Module
 {
+    // active during module loading stage
 	public function init(ModuleManager $mm)
 	{
         $eventManager = $mm->getEventManager();
@@ -28,7 +29,10 @@ class Module
 			Storage::$order[] = '....------------ CheckOrder\Module::onLoadModulesPostFromInitShared() -------------------';
 			Storage::$order[] = '....Param: ' . get_class($e);
 		    });
+        Storage::$order[] = '======== List of All Events From init() ==================';
+        Storage::$order[] = \Zend\Debug\Debug::dump($eventManager->getEvents(), NULL, FALSE);
 	}
+	// active during the MVC stage (*after* modules are loaded)
 	public function onBootstrap(MvcEvent $e)
 	{
         $eventManager = $e->getApplication()->getEventManager();
@@ -36,7 +40,7 @@ class Module
 		Storage::$order[] = '....onBootstrap() Param: ' . get_class($e);
 		Storage::$order[] = '....MVC Event Class: ' . get_class($e);
 		Storage::$order[] = '....MVC Manager Class: ' . get_class($e->getApplication());
-		// NOTE: MvcEvent $e will only handle MVC events
+		// NOTE: MvcEvent $e will only handle MVC events (to late!!!)
 		$eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, 
 							  array($this, 'onLoadModulesPostFromBootstrap'));
 	    // This is OK
@@ -49,6 +53,8 @@ class Module
 			Storage::$order[] = '....------------ CheckOrder\Module::onLoadModulesPostFromBootstrapShared() -------------------';
 			Storage::$order[] = '....Param: ' . get_class($e);
 		    });
+        Storage::$order[] = '======== List of All Events From onBootstrap() =============';
+        Storage::$order[] = \Zend\Debug\Debug::dump($eventManager->getEvents(), NULL, FALSE);
 	}
 	
 	public function onLoadModulesPostFromInit($e)

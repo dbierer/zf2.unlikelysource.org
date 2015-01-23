@@ -10,12 +10,15 @@
 namespace ServiceManagerDemo\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return array();
+        $model = $this->getServiceLocator()->get('service-manager-demo-model');
+        $viewModel = new ViewModel(array('model' => $model));
+        return $viewModel;
     }
 
     public function fooAction()

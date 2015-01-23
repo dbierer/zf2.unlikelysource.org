@@ -1,3 +1,17 @@
-<strong>Module:</strong>        ServiceManagerDemo &raquo;
-<strong>Controller:</strong>    Index &raquo;
-<strong>Action:</strong>        index
+<h1>Service Manager Demo</h1>
+Shows an example of using "delegators"
+
+<hr />
+Value of <b>test</b>:
+<br />
+<?php echo $this->model->getTest(); ?>
+
+<hr />
+Value of <b>control</b>:
+<br />
+<?php echo $this->model->getControl(); ?>
+
+<hr />
+Why you should not use <b>initializers</b>:
+<br />
+<?php $this->htmlList($this->model->getOutput()); ?>

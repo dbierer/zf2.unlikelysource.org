@@ -1,5 +1,5 @@
 <?php
-namespace TimeLog;
+namespace DropBox;
 
 class Module
 {
