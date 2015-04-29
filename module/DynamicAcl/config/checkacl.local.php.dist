@@ -1,0 +1,15 @@
+<?php
+/*
+ * Change the alias to make it equivalent to 'Zend\Authentication\AuthenticationService'
+ * NOTE: see "application-auth-service" defined in Application/config/module.config.php
+ */
+return array(
+	'service_manager' => array(
+		'aliases' => array(
+			'DynamicAcl-auth-service' => 'auth-service',
+		),
+		'invokables' => array(
+			'auth-service' => 'Zend\Authentication\AuthenticationService',
+		),
+	),
+);

@@ -2,7 +2,7 @@
 return [
     'navigation' => [
         'default' => [
-    	   array('label' => 'RouteTest', 'route' => 'routetest-home', 'order' => 1400),
+    	   array('label' => 'RouteTest', 'route' => 'routetest-home', 'resource' => 'routetest', 'order' => 1400),
         ],
     ],
     'controllers' => [

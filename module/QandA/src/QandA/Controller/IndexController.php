@@ -18,8 +18,8 @@ use Zend\Session\Container;
 class IndexController extends AbstractActionController
 {
     public $data;    // instance of QandA\Model\Data
-    protected $itemsPerPage = 12;
-    protected $pagesWithinRange = 6;
+    protected $itemsPerPage = 6;
+    protected $pagesWithinRange = 4;
     
     public function indexAction()
     {

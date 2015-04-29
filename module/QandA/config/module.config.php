@@ -2,7 +2,7 @@
 return array(
     'navigation' => array(
         'default' => array(
-    	   array('label' => 'Q & A', 'route' => 'q-and-a', 'order' => 1100),
+    	   array('label' => 'Q & A', 'route' => 'q-and-a', 'resource' => 'qanda', 'order' => 99999),
         ),
     ),
     'controllers' => array(

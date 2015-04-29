@@ -63,4 +63,16 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'navigation-left-col' => function ($sm) {
+                    $factory = new \Zend\Navigation\Service\ConstructedNavigationFactory($sm->get('navigation-config-left-col'));
+                    return $factory->createService($sm);
+                },
+            ),
+        );
+    }
 }

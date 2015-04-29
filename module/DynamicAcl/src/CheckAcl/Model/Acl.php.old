@@ -1,0 +1,117 @@
+<?php
+namespace DynamicAcl\Model;
+
+use Zend\Permissions\Acl\Acl as ZendAcl;
+use Zend\Http\Header\Allow;
+use Campuses\Model\Campuses;
+
+class Acl extends ZendAcl
+{
+	public function __construct()
+	{
+
+		// resources = controllers or controller route mappings
+				$this
+					->addResource('acl-actions-controller-acl-actions')
+					->addResource('acl-allow-controller-acl-allow')
+					->addResource('acl-resource-controller-acl-resource')
+					->addResource('application-controller-index')
+					->addResource('campuses-controller-campuses')
+					->addResource('districts-controller-districts')
+					->addResource('finalize-order-controller-finalize-order')
+					->addResource('groups-controller-groups')
+					->addResource('log-me-in-controller-index')
+					->addResource('log-me-in-controller-login')
+					->addResource('nav-acl-controller-nav-acl')
+					->addResource('nav-menu-controller-nav-menu')
+					->addResource('product-catalogue-controller-product')
+					->addResource('pricing-controller-pricing')
+					->addResource('purchases-controller-purchases')
+					->addResource('purchased-controller-purchased')
+					->addResource('school-years-controller-school-years')
+					->addResource('sections-controller-sections')
+					->addResource('selectproduct-controller')
+					->addResource('services-controller-services')
+					->addResource('shopping-cart-controller-purchase')
+					->addResource('shopping-cart-controller-shopping-cart')
+					;
+		
+		$this
+				->addRole('guest')
+
+/////////////// All District groups inherit from everyone ///////
+				->addRole('everyone', 'guest')      // everyone inherits from guest
+				
+/////////////// All ESC groups inherit from admins ///////
+				
+		        // 2015-02-16 DB: modified inheritance structure
+				->addRole('admins', 'everyone')      // admins inherits from everyone
+				
+				->addRole('superadmin', 'admins')      // superadmins inherits from admins
+
+/////////////// Internal ESC admin groups /////////////////////////////////////		
+				->addRole('APP-Solutions', 'superadmin')
+				->addRole('Com-Directors', 'admins')
+				->addRole('Com-Technology', 'admins')
+				->addRole('SOLAlpineISD', 'admins')   //  Temporary for doug@unlikelysource.org region18
+				
+				
+/////////////////  Districts groups for Solutions				
+				->addRole('SOLAndrewsISD', 'everyone')  // fzappa@andrews.esc18.net moonunit
+
+				->addRole('SOLMidlandISD', 'everyone')  // jtull@midlandisd.net  aqualung
+
+				;
+
+
+		// rights = actions
+		// assignment for "guest"
+		$this
+				->allow('guest', 'log-me-in-controller-login');
+			
+		// assignment for "everyone" (which includes everyone except for guest)
+		$this
+		       	->allow('everyone', 'application-controller-index', array('index'))
+				->allow('everyone', 'application-controller-index', array('solutions'))
+				->allow('everyone', 'purchased-controller-purchased', array('purchased','index','pdfc','search'))
+				->allow('everyone', 'shopping-cart-controller-shopping-cart', array('index','shoppingCart','add','update','delete'))
+				->allow('everyone', 'shopping-cart-controller-purchase', array('index','purchase'))
+				->allow('everyone', 'selectproduct-controller', array('index','selectproduct','list'))	
+
+				->allow('everyone', 'finalize-order-controller-finalize-order', array('finalize'))
+				
+				;
+		
+		////////  This list is for Admins to access the purchasing side
+		
+		$this
+				->allow('admins', 'product-catalogue-controller-product', array('product','search','add','edit','delete','addasnew'))
+				->allow('admins', 'shopping-cart-controller-shopping-cart', array('index','shoppingCart','add','update','delete'))
+				->allow('admins', 'shopping-cart-controller-purchase', array('index','purchase','thanks'))
+				->allow('admins', 'selectproduct-controller', array('index','selectproduct','list'))
+				->allow('admins', 'purchases-controller-purchases', array('index','add','delete','edit','pdfca','searchpdf','search'))
+				->allow('admins', 'purchased-controller-purchased', array('purchased','index','pdfc','search'))
+		
+				;		
+		
+		/////////  Admins Controllers for all restricted controllers	
+		$this
+				->allow('admins', 'application-controller-index', array('index'))
+				->allow('admins', 'acl-actions-controller-acl-actions', array('index','add','edit','delete'))
+				->allow('admins', 'acl-allow-controller-acl-allow', array('index','add','edit','delete'))
+				->allow('admins', 'acl-resource-controller-acl-resource', array('index','add','edit','delete'))
+				->allow('admins', 'campuses-controller-campuses', array('index','add','edit','delete'))
+				->allow('admins', 'districts-controller-districts', array('index','add','edit','delete'))
+				->allow('admins', 'finalize-order-controller-finalize-order', array('index','edit','finalize'))
+				->allow('admins', 'groups-controller-groups', array('index','add','edit','delete'))  
+				->allow('admins', 'nav-acl-controller-nav-acl', array('index','add','edit','delete'))
+				->allow('admins', 'nav-menu-controller-nav-menu', array('index','add','edit','delete'))
+				->allow('admins', 'pricing-controller-pricing', array('index','shoppingCart','add','update','delete'))
+				->allow('admins', 'product-catalogue-controller-product', array('index','home','product','add','edit','delete','addasnew'))
+				->allow('admins', 'school-years-controller-school-years', array('index','add','edit','delete','addasnew'))
+				->allow('admins', 'sections-controller-sections', array('index','add','edit','delete'))				
+				->allow('admins', 'services-controller-services', array('index','add','edit','delete','details'))
+				;
+				
+	}
+}

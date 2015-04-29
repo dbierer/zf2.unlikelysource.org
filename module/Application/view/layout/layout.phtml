@@ -189,8 +189,8 @@ body {
 		<span class="menu"><a href="<?php echo $this->basePath(); ?>/user/logout">Logout</a></span>
 	<?php endif; ?>
 	<?php */ ?>
-	<?php echo $this->navigation()
-	                ->menu('navigation-main-menu')
+	<?php echo $this->navigation('navigation-main-menu')
+	                ->menu()
 	                ->setUlClass('menu')
 	                ->render(); ?>
 	</div>
@@ -218,11 +218,9 @@ body {
   <div id="sidebar" style="width:<?php echo $template['leftColumnWidth']; ?>px;">
   	  Welcome <?php echo $name; ?>
   	  <br />
+      <!-- Left Column Menu -->
       <?php
-      	// left column menu
-//      	if (isset($this->leftColumnMenu)) {
             echo $this->navigation()->menu('navigation-left-col')->render();
-//        }
       ?>
       <h3>Source Code:</h3>
       Click here to access the source code for this website:

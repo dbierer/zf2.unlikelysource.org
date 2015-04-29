@@ -17,10 +17,6 @@ return array(
         'factories' => array(
             'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
             'navigation-main-menu' => 'Zend\Navigation\Service\DefaultNavigationFactory',
-            'navigation-left-col' => function ($sm) {
-                $factory = new Zend\Navigation\Service\ConstructedNavigationFactory($sm->get('navigation-config-left-col'));
-                return $factory->createService($sm);
-            },
         ),
         'services' => array(
            'application-test' => array(1,2,3),
