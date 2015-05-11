@@ -10,6 +10,9 @@ class DelegatorDemoFactory implements DelegatorFactoryInterface
 	{
 		$model = call_user_func($callback);
 		$model->setTest('INJECTED BY ' . __CLASS__);
+        $model->setOutput('DELEGATOR: CALLED: ' . microtime());
+		$model->setOutput('DELEGATOR: $name: ' . $name);
+		$model->setOutput('DELEGATOR: $requestedName: ' . $requestedName);
 		return $model;
 	}
 }

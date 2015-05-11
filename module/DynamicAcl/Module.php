@@ -1,4 +1,4 @@
-<?php
+                                                                                                                                                                                <?php
 // 2015-03-11 DB: modified to add dynamic menu + ACL builder
 // NOTE: DO NOT activate this module!!!  
 // It's here just to illustrate techniques which could be used to implement a dynamic ACL and menu

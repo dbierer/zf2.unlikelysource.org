@@ -16,8 +16,11 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        $logFn = $this->getServiceLocator()->get('service-manager-demo-log');
+        $logInfo = file_get_contents($logFn);
+        file_put_contents($logFn, '');
         $model = $this->getServiceLocator()->get('service-manager-demo-model');
-        $viewModel = new ViewModel(array('model' => $model));
+        $viewModel = new ViewModel(array('model' => $model, 'log' => $logInfo));
         return $viewModel;
     }
 

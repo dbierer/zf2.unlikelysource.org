@@ -7,6 +7,11 @@ class DemoModel
     protected $test       = 'DEFAULT VALUE IN MODEL';
     protected $control    = 'CONTROL';
 
+    public static function addOutput($info)
+    {
+        self::$output[] = $info;
+    }
+    
     public function setOutput($info)
     {
         self::$output[] = $info;
