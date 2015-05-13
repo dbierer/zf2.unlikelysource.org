@@ -1,5 +1,5 @@
 <?php
-// see http://framework.zend.com/manual/2.2/en/modules/zend.service-manager.delegator-factories.html
+// NOTE: all service manager config for this module is in Module.php 
 return array(
     'navigation' => array(
         'default' => array(

@@ -14,10 +14,14 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
-    public function indexAction()
+    public function indexAction() 
     {
-        $logFn = $this->getServiceLocator()->get('service-manager-demo-log');
+        // 'service-manager-demo-test' is not defined: should use abstract factory
+        $demoTest = $this->getServiceLocator()->get('service-manager-demo-test');
+        // get logfile and send to view
+        $logFn = $this->getServiceLocator()->get('service-manager-demo-logfile');
         $logInfo = file_get_contents($logFn);
+        // clear for next time
         file_put_contents($logFn, '');
         $model = $this->getServiceLocator()->get('service-manager-demo-model');
         $viewModel = new ViewModel(array('model' => $model, 'log' => $logInfo));

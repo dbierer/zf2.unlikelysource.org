@@ -13,6 +13,7 @@ use ServiceManagerDemo\Model\DemoModel;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use ServiceManagerDemo\Factory\DontInitializeMe;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -39,24 +40,31 @@ class Module implements AutoloaderProviderInterface
     {
         return array(
             'services' => array(
-                'service-manager-demo-log' => __DIR__ . '/../../data/logs/service-manager-demo.log',
+                'service-manager-demo-logfile' => __DIR__ . '/../../data/logs/service-manager-demo.log',
             ),
             'invokables' => array(
+                // see http://framework.zend.com/manual/2.2/en/modules/zend.service-manager.delegator-factories.html
                 'service-manager-demo-delegator-factory' => 'ServiceManagerDemo\Factory\DelegatorDemoFactory',
             ),
             'factories' => array(
+                'service-manager-demo-model' => 'ServiceManagerDemo\Factory\DemoFactory',
+                /*
                 'service-manager-demo-model' => function ($sm) {
                     $model = new DemoModel();
                     $model->setControl('INJECTED BY ' . __CLASS__);
                     $model->setTest('INJECTED BY ' . __CLASS__);
-                    $model->setOutput('FACTORY CALLED: ' . microtime());
+                    $model->setOutput('FACTORY CALLED: ' . date('Y-m-d H:i:s') . ' ' . microtime());
                     return $model;
                 },
+                */
+            ),
+            'abstract_factories' => array(
+                'service-manager-demo-logfactory' => 'ServiceManagerDemo\Factory\DemoAbstractFactory',
             ),
             'initializers' => array(
                 'service-manager-demo-example-initializer' =>
                     function ($instance, $sm) {
-                        $log = $sm->get('service-manager-demo-log');
+                        $log = $sm->get('service-manager-demo-logfile');
                         $this->logInfo($log, $instance, 'SERVICE');
                     },
             ),
@@ -73,7 +81,7 @@ class Module implements AutoloaderProviderInterface
         return array(
             'initializers' => array(
                 'service-manager-demo-test-controller-initializer' => function ($instance, $cm) {
-                    $log = $cm->getServiceLocator()->get('service-manager-demo-log');
+                    $log = $cm->getServiceLocator()->get('service-manager-demo-logfile');
                     $this->logInfo($log, $instance, 'CONTROLLER');
                 },
             ),
@@ -85,8 +93,10 @@ class Module implements AutoloaderProviderInterface
         $message = 'INITIALIZER: ' . $type . ': ';
         if (is_object($instance)) {
             $message .= get_class($instance) . PHP_EOL;
-        } else {
+        } elseif (is_string($instance)) {
             $message .= 'non-object data type' . PHP_EOL;
+        } else {
+            $message .= 'unknown data type' . PHP_EOL;
         }
         error_log($message, 3, $log);
     }
